@@ -8,3 +8,11 @@ a, a:hover, a:visited, a:link, a:active, a .md-whiteframe, a h3 {
 .hidden {
   display:none;
 }
+
+.width-100 {
+  width:100%;
+}
+
+.padding-16 {
+  padding:16px;
+}

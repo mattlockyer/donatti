@@ -1,5 +1,8 @@
 
 
+import utils from '../web3-utils';
+import Don from '../../../build/contracts/Don';
+
 export default {
   
   data() {
@@ -29,10 +32,7 @@ export default {
         gas: 1000000
       });
       
-      const don = await APP.donatti.getDons.call();
-      
-      
-    }
+    },
     //jshint ignore: end
   },
   
