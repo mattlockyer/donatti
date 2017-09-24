@@ -1,4 +1,10 @@
 
+
+a, a:hover, a:visited, a:link, a:active, a .md-whiteframe, a h3 {
+  color: black;
+  text-decoration: none;
+}
+
 .hidden {
   display:none;
 }

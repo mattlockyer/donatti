@@ -14,6 +14,7 @@ contract Donatti is Ownable {
   address private owner;
   
   Don[] public dons;
+  mapping(address => address[]) public donMap;
   
   //constructor
   function Donatti() {
@@ -24,7 +25,12 @@ contract Donatti is Ownable {
   function create(string _name) {
     Don don = new Don(_name);
     don.transferOwner(msg.sender);
+    donMap[msg.sender].push(don);
     dons.push(don);
+  }
+  
+  function getDons() returns (address[]) {
+    return donMap[msg.sender];
   }
   
   /**************************************

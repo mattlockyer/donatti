@@ -11,9 +11,11 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffffff">
 
-  <title>Boilerplate</title>
-  <meta name="description" content="The Ethereum Wishing Well">
+  <title>Donatti</title>
+  <meta name="description" content="Online Donation Boxes for All">
   <meta name="author" content="mattlock">
+  
+  <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
   
   
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
@@ -43,7 +45,7 @@
           <md-icon>menu</md-icon>
         </md-button>
     
-        <h2 class="md-title">Boilerplate</h2>
+        <h2 class="md-title">Donatti</h2>
       </md-toolbar>
     
       <md-sidenav class="md-left" ref="leftSidenav">
@@ -51,7 +53,7 @@
         <md-toolbar class="side-nav">
           <div class="md-toolbar-container">
             <router-link to="/" exact>
-              <h3 class="md-title">Boilerplate</h3>
+              <h3 class="md-title">Donatti</h3>
             </router-link>
           </div>
           <md-list md-theme="second">
@@ -85,6 +87,8 @@
   <script src="lib/truffle-contract.js"></script>
   -->
   
+  <script src="https://unpkg.com/flatpickr"></script>
+
   <script src="//cdnjs.cloudflare.com/ajax/libs/localforage/1.5.0/localforage.min.js" async></script>
   <script src="//cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.min.js"></script>
   <script src="//cdn.rawgit.com/trufflesuite/truffle-contract/812436ca/dist/truffle-contract.min.js"></script>

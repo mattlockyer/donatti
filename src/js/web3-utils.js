@@ -1,9 +1,6 @@
 
 
 /**************************************
-* The following utilities depend on web3 and truffle-contract
-**************************************/
-/**************************************
 * Get Web3
 **************************************/
 const getWeb3 = (fallbackURL = 'http://localhost:8545', web3 = window.web3) => {
@@ -96,5 +93,6 @@ export default {
   setWeb3,
   getNetwork,
   getAccounts,
-  getContract
+  getContract,
+  deployContract
 };
