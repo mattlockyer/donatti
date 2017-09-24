@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="ico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="ico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="ico/favicon-16x16.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Boilerplate</title>
+  <meta name="description" content="The Ethereum Wishing Well">
+  <meta name="author" content="mattlock">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/vue-material/0.7.5/vue-material.css">
+
+  <link rel="stylesheet" href="css/app.css">
+
+  <!--[if lt IE 9]>
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  
+  
+  <div id="app">
+    
+    <div ref="loader" class="loader">
+      <img src="img/loader.gif" />
+    </div>
+    
+    <div ref="content" class="hidden">
+      <md-toolbar class="toolbar width-100">
+        <md-button class="md-icon-button" @click="toggleLeftSidenav">
+          <md-icon>menu</md-icon>
+        </md-button>
+    
+        <h2 class="md-title">Boilerplate</h2>
+      </md-toolbar>
+    
+      <md-sidenav class="md-left" ref="leftSidenav">
+        
+        <md-toolbar class="side-nav">
+          <div class="md-toolbar-container">
+            <router-link to="/" exact>
+              <h3 class="md-title">Boilerplate</h3>
+            </router-link>
+          </div>
+          <md-list md-theme="second">
+            
+            <md-list-item v-for="item in menu" v-if="item.visible">
+              <router-link :to="item.path" exact>
+                {{ item.label }}
+              </router-link>
+            </md-list-item>
+            
+          </md-list>
+        </md-toolbar>
+  
+      </md-sidenav>
+      
+      <router-view></router-view>
+      
+      <md-snackbar ref="snackbar" md-position="bottom center" md-duration="3000">
+        <span>{{ snackbarMessage }}</span>
+      </md-snackbar>
+      
+    </div>
+    
+  </div>
+
+  <!--
+  <script src="lib/localforage.min.js"></script>
+  <script src="lib/vue.min.js"></script>
+  <script src="lib/vue-router.min.js"></script>
+  <script src="lib/web3.js"></script>
+  <script src="lib/truffle-contract.js"></script>
+  -->
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/localforage/1.5.0/localforage.min.js" async></script>
+  <script src="//cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.min.js"></script>
+  <script src="//cdn.rawgit.com/trufflesuite/truffle-contract/812436ca/dist/truffle-contract.min.js"></script>
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue-material/0.7.5/vue-material.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue-router/2.7.0/vue-router.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script>
+  
+  <script src="js/app.js"></script>
+  
+</body>
+</html>
