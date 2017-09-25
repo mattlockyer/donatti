@@ -19,6 +19,7 @@ export default {
     //jshint ignore: start
     async submit(params) {
       
+      
       const tx = await APP.donatti.create(...params, {
         from: APP.account,
         value: 0,
@@ -34,9 +35,7 @@ export default {
       <md-layout md-align="center" :md-gutter="true">
       
         <md-layout md-flex="100" md-align="center">
-            
           <h2>Create a Donatti</h2>
-          
         </md-layout>
           
         <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">

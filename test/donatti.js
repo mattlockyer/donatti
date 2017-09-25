@@ -30,6 +30,8 @@ contract('Donatti', function(accounts) {
     assert(don !== undefined, "don wasn't deployed");
   });
   
+  //return;
+  
   //pay with default
   
   it("should be able to pay a don using default", async () => {

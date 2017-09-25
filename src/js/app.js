@@ -15,6 +15,7 @@ Theme.init();
 
 const APP = window.APP = {
   donMap: {},
+  donParams: {},
   donList: [],
   //jshint ignore: start
   updateDons: async (cb) => {
@@ -29,11 +30,12 @@ const APP = window.APP = {
     for (let i in dons) {
       const addr = dons[i];
       const don = await utils.getContract(Don, addr);
-      const name = await don.name.call();
+      const params = await don.getParameters.call();
       if (!APP.donMap[addr]) {
         don.i = i;
         APP.donMap[addr] = don;
-        APP.donList.push({ addr, name });
+        APP.donParams[addr] = params;
+        APP.donList.push({ addr, name: params[0] });
       }
     }
     //callback
@@ -53,7 +55,7 @@ const VueApp = new Vue({
   },
   
   watch: {
-    $route: function() {
+    $route() {
       this.closeNav();
     }
   },
