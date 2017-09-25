@@ -8,27 +8,25 @@ import './Ownable.sol';
 
 contract Don is Ownable {
 
-  string public name;
   uint256 public balance;
   
-  bool public open = true; //open or closed
+  string public name;
   
-  uint256 public start = 0; //beginning of time
-  uint256 public end = 999999999999; //forever
+  bool public open; //open or closed
+  bool public over; //allow overcontributing
+
+  uint256 public start;
+  uint256 public end;
   
-  bool public over = false; //allow overcontributing
-  uint256 public goal = 1000;
+  uint256 public goal;
   
   //modifiers
   modifier isOpen () {
-    require(open && (over || (!over && balance < goal)) && (now > start && now < end));
+    require(open && (over || goal == 0 || (!over && balance < goal)) && (now > start && now < end));
     _;
   }
   
   //constructor
-  function Don(string _name) {
-    name = _name;
-  }
   
   //default payable
   function() payable isOpen {
@@ -39,22 +37,22 @@ contract Don is Ownable {
     balance += _amount;
   }
   
-  function getParameters() constant returns (bool _over, bool _open, uint256 _start, uint256 _end, uint256 _goal) {
-    return (open, over, start, end, goal);
+  function getParameters() constant returns (string, bool, bool, uint256, uint256, uint256) {
+    return (name, open, over, start, end, goal);
   }
   
   /**************************************
   * Owned functions
   **************************************/
-  function setOpen(bool _open) onlyOwner { open = _open; }
-  function setOver(bool _over) onlyOwner { over = _over; }
-  function setStart(uint256 _start) onlyOwner { start = _start; }
-  function setEnd(uint256 _end) onlyOwner { end = _end; }
-  function setGoal(uint256 _goal) onlyOwner { goal = _goal; }
   
   //update
-  function update(bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal) onlyOwner {
-    setOpen(_open); setOver(_over); setStart(_start); setEnd(_end); setGoal(_goal);
+  function update(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal) onlyOwner {
+    name = _name;
+    open = _open;
+    over = _over;
+    start = _start;
+    end = _end;
+    goal = _goal;
   }
 }
 

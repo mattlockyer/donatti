@@ -2,34 +2,27 @@
 
 import utils from '../web3-utils';
 import Don from '../../../build/contracts/Don';
+import DonForm from '../components/don-form';
 
 export default {
   
-  data() {
-    return {
-      name: '',
-      start: '',
-      end: '',
-    };
+  components: {
+    'don-form': DonForm
   },
+  
   
   created() {
     
   },
   
-  mounted() {
-    flatpickr('.date-picker', {});
-  },
-  
   methods: {
     //jshint ignore: start
-    async submit() {
-      //console.log(Math.floor(new Date(this.start).getTime() / 1000));
+    async submit(params) {
       
-      const tx = await APP.donatti.create(this.name, {
+      const tx = await APP.donatti.create(...params, {
         from: APP.account,
         value: 0,
-        gas: 1000000
+        gas: 4000000
       });
       
     },
@@ -39,32 +32,19 @@ export default {
   template: `
     <div class="page">
       <md-layout md-align="center" :md-gutter="true">
-        <md-layout md-flex="35" md-flex-xsmall="80" md-align="center">
+      
+        <md-layout md-flex="100" md-align="center">
             
           <h2>Create a Donatti</h2>
           
-          <form novalidate @submit.stop.prevent="submit">
-          
-            <md-input-container md-theme="second">
-              <label>Name</label>
-              <md-input v-model="name" placeholder="Name Your Donatti"></md-input>
-            </md-input-container>
-            
-            <md-input-container md-theme="second">
-              <label>Start Date</label>
-              <md-input class="date-picker" v-model="start" placeholder="Choose Start Date"></md-input>
-            </md-input-container>
-            
-            <md-input-container md-theme="second">
-              <label>End Date</label>
-              <md-input class="date-picker" v-model="end" placeholder="Choose End Date"></md-input>
-            </md-input-container>
-            
-            <md-button raised v-on:click="submit">Submit</md-button>
-            
-          </form>
-        
         </md-layout>
+          
+        <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">
+          <md-whiteframe elevation="1" class="width-100 padding-16">
+            <don-form :parent="this"></don-form>
+          </md-whiteframe>
+        </md-layout>
+        
       </md-layout>
     </div>
   `

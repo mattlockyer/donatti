@@ -17,14 +17,13 @@ contract Donatti is Ownable {
   mapping(address => address[]) public donMap;
   
   //constructor
-  function Donatti() {
-    
-  }
+  function Donatti() {}
   
   //create a new contract
-  function create(string _name) {
-    Don don = new Don(_name);
-    don.transferOwner(msg.sender);
+  function create(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal) {
+    Don don = new Don();
+    don.update(_name, _open, _over, _start, _end, _goal);
+    don.transferOwnership(msg.sender);
     donMap[msg.sender].push(don);
     dons.push(don);
   }

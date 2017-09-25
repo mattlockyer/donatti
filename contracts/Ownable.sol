@@ -6,7 +6,7 @@ pragma solidity ^0.4.11;
 
 contract Ownable {
   
-  address private owner;
+  address public owner;
   
   //modifiers
   modifier onlyOwner() {
@@ -19,7 +19,7 @@ contract Ownable {
     owner = msg.sender;
   }
   
-  function transferOwner(address _owner) onlyOwner {
+  function transferOwnership(address _owner) onlyOwner {
     owner = _owner;
   }
 

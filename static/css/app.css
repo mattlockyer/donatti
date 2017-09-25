@@ -5,6 +5,12 @@ a, a:hover, a:visited, a:link, a:active, a .md-whiteframe, a h3 {
   text-decoration: none;
 }
 
+.loader {
+  text-align:center;
+  margin-top:25vh;
+  transform:scale(0.5, 0.5);
+}
+
 .hidden {
   display:none;
 }

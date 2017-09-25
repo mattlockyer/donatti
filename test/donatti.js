@@ -21,7 +21,10 @@ contract('Donatti', function(accounts) {
   **************************************/
   
   it("should be create a don", async () => {
-    const tx = await donatti.create("Test Don Box", { from: owner });
+    const tx = await donatti.create("Test Don Box", true, false, 0, 999999999999, 1000, {
+      from: owner,
+      gas: 4000000
+    });
     don = await Don.at(await donatti.dons.call(0));
     
     assert(don !== undefined, "don wasn't deployed");
@@ -71,7 +74,7 @@ contract('Donatti', function(accounts) {
   
   it("increase goal", async () => {
     const params = await don.getParameters.call();
-    params[4] = 2000;
+    params[5] = 2000;
     const tx = await don.update(...params);
     const tx2 = await don.pay(1000, { from: owner });
     const balance = (await don.balance.call()).toNumber();
@@ -81,7 +84,7 @@ contract('Donatti', function(accounts) {
   
   it("update to allow over contribution", async () => {
     const params = await don.getParameters.call();
-    params[1] = true;
+    params[2] = true;
     const tx = await don.update(...params);
     const tx2 = await don.pay(1000, { from: owner });
     const balance = (await don.balance.call()).toNumber();
@@ -91,7 +94,7 @@ contract('Donatti', function(accounts) {
   
   it("close contributions", async () => {
     const params = await don.getParameters.call();
-    params[0] = false;
+    params[1] = false;
     const tx = await don.update(...params);
     const tx2 = don.pay(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
@@ -102,7 +105,7 @@ contract('Donatti', function(accounts) {
   
   it("open contributions", async () => {
     const params = await don.getParameters.call();
-    params[0] = true;
+    params[1] = true;
     const tx = await don.update(...params);
     const tx2 = await don.pay(1000, { from: owner });
     const balance = (await don.balance.call()).toNumber();
@@ -116,7 +119,7 @@ contract('Donatti', function(accounts) {
   
   it("EXCEPTION: set start time to now + 1000", async () => {
     const params = await don.getParameters.call();
-    params[2] = Math.floor((Date.now() / 1000)) + 1000;
+    params[3] = Math.floor((Date.now() / 1000)) + 1000;
     const tx = await don.update(...params);
     const tx2 = don.pay(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
@@ -128,7 +131,7 @@ contract('Donatti', function(accounts) {
   
   it("set start time to now - 1000", async () => {
     const params = await don.getParameters.call();
-    params[2] = Math.floor((Date.now() / 1000)) - 1000;
+    params[3] = Math.floor((Date.now() / 1000)) - 1000;
     const tx = await don.update(...params);
     const tx2 = await don.pay(1000, { from: owner });
     const balance = (await don.balance.call()).toNumber();
@@ -142,7 +145,7 @@ contract('Donatti', function(accounts) {
   
   it("EXCEPTION: set end time to now - 1000", async () => {
     const params = await don.getParameters.call();
-    params[3] = Math.floor((Date.now() / 1000)) - 1000;
+    params[4] = Math.floor((Date.now() / 1000)) - 1000;
     const tx = await don.update(...params);
     const tx2 = don.pay(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
@@ -153,7 +156,7 @@ contract('Donatti', function(accounts) {
   
   it("set end time to now + 1000", async () => {
     const params = await don.getParameters.call();
-    params[3] = Math.floor((Date.now() / 1000)) + 1000;
+    params[4] = Math.floor((Date.now() / 1000)) + 1000;
     const tx = await don.update(...params);
     const tx2 = await don.pay(1000, { from: owner });
     const balance = (await don.balance.call()).toNumber();

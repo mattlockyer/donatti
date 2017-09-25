@@ -54,7 +54,7 @@ const VueApp = new Vue({
   
   watch: {
     $route: function() {
-      
+      this.closeNav();
     }
   },
   
@@ -74,8 +74,15 @@ const VueApp = new Vue({
   },
   
   methods: {
-    toggleLeftSidenav() {
+    closeNav() {
+      this.$refs.leftSidenav.close();
+    },
+    toggleNav() {
       this.$refs.leftSidenav.toggle();
+    },
+    snack(msg) {
+      this.snackbarMessage = msg;
+      if (!this.$refs.snackbar.active) this.$refs.snackbar.open();
     },
   }
 });
