@@ -22,8 +22,7 @@ export default {
   
   methods: {
     submit() {
-      const { name, open, over, start, end, goal } = this;
-      const params = [ name, open, over, start, end, goal ];
+      const params = this.stateParams.slice();
       
       //check name was set
       if (params[0] === '') {
@@ -38,11 +37,14 @@ export default {
       this.parent.submit(params);
     },
     reset() {
-      this.stateParams = this.params.slice();
+      const params = this.stateParams = this.params.slice();
+      
       //check defaults for start, end, goal
-      if (this.stateParams[3].toNumber() === 0) this.stateParams[3] = '';
-      if (this.stateParams[4].toNumber() === 999999999) this.stateParams[4] = '';
-      if (this.stateParams[5].toNumber() === 0) this.stateParams[5] = '';
+      if (params[3].toNumber() === 0) params[3] = '';
+      else params[3] = FlatpickrInstance.prototype.formatDate(new Date(params[3] * 1000), 'Y-m-d h:i');
+      if (params[4].toNumber() === 999999999) params[4] = '';
+      else params[4] = FlatpickrInstance.prototype.formatDate(new Date(params[4] * 1000), 'Y-m-d h:i');
+      if (params[5].toNumber() === 0) params[5] = '';
     }
   },
   

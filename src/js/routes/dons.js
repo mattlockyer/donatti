@@ -34,15 +34,19 @@ export default {
                   <md-table-head>Name</md-table-head>
                   <md-table-head>Address</md-table-head>
                   <md-table-head></md-table-head>
+                  <md-table-head></md-table-head>
                 </md-table-row>
               </md-table-header>
             
               <md-table-body>
-                <md-table-row v-for="don in APP.donList">
-                  <md-table-cell>{{ don.name }}</md-table-cell>
-                  <md-table-cell>{{ don.addr }}</md-table-cell>
+                <md-table-row v-for="addr in APP.donList">
+                  <md-table-cell>{{ APP.donParams[addr][0] }}</md-table-cell>
+                  <md-table-cell>{{ addr }}</md-table-cell>
                   <md-table-cell>
-                    <router-link :to="'/don/' + don.addr">Open</router-link>
+                    <router-link :to="'/don/' + addr">View</router-link>
+                  </md-table-cell>
+                  <md-table-cell>
+                    <router-link :to="'/edit/' + addr">Edit</router-link>
                   </md-table-cell>
                 </md-table-row>
               </md-table-body>

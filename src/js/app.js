@@ -35,7 +35,7 @@ const APP = window.APP = {
         don.i = i;
         APP.donMap[addr] = don;
         APP.donParams[addr] = params;
-        APP.donList.push({ addr, name: params[0] });
+        APP.donList.push(addr);
       }
     }
     //callback
