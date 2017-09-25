@@ -28,9 +28,9 @@ const APP = window.APP = {
     //grab each don instance
     for (let i in dons) {
       const addr = dons[i];
+      const don = await utils.getContract(Don, addr);
+      const name = await don.name.call();
       if (!APP.donMap[addr]) {
-        const don = await utils.getContract(Don, addr);
-        const name = await don.name.call();
         don.i = i;
         APP.donMap[addr] = don;
         APP.donList.push({ addr, name });
