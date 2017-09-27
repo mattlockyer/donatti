@@ -22,7 +22,7 @@ contract Don is Ownable {
   
   //modifiers
   modifier isOpen () {
-    require(open && (over || goal == 0 || (!over && balance < goal)) && (now > start && now < end));
+    require(open && (over || goal == 0 || balance < goal) && (now > start && now < end));
     _;
   }
   

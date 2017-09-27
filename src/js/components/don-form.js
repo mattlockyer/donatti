@@ -2,7 +2,7 @@
 
 export default {
   
-  props: ['parent', 'params', 'submitLabel', 'resetLabel'],
+  props: ['parent', 'params', 'id', 'submitLabel', 'resetLabel'],
   
   data() {
     return {
@@ -17,6 +17,7 @@ export default {
   },
   
   mounted() {
+    console.log(this.id);
     flatpickr('.date-picker', { enableTime: true });
   },
   
@@ -31,7 +32,7 @@ export default {
       }
       //set times and goal
       params[3] = Math.floor(new Date(params[3] ? params[3] : 0).getTime() / 1000); //start time
-      params[4] = Math.floor(new Date(params[4] ? params[4] : 999999999999).getTime() / 1000); //end time
+      params[4] = Math.floor(new Date(params[4] ? params[4] : 9999999999999).getTime() / 1000); //end time
       if (params[5] === '') params[5] = 0;
       
       this.parent.submit(params);
@@ -42,7 +43,7 @@ export default {
       //check defaults for start, end, goal
       if (params[3].toNumber() === 0) params[3] = '';
       else params[3] = FlatpickrInstance.prototype.formatDate(new Date(params[3] * 1000), 'Y-m-d h:i');
-      if (params[4].toNumber() === 999999999) params[4] = '';
+      if (params[4].toNumber() === 9999999999) params[4] = '';
       else params[4] = FlatpickrInstance.prototype.formatDate(new Date(params[4] * 1000), 'Y-m-d h:i');
       if (params[5].toNumber() === 0) params[5] = '';
     }
@@ -83,6 +84,9 @@ export default {
       <md-layout md-align="center">
         <md-button class="md-raised" v-on:click="submit">{{ submitLabel ? submitLabel : 'Submit' }}</md-button>
         <md-button class="md-raised" v-on:click="reset">{{ resetLabel ? resetLabel : 'Reset' }}</md-button>
+        <router-link v-if="id" :to="'/don/' + id">
+          <md-button class="md-raised">View</md-button>
+        </router-link>
       </md-layout>
       
     </form>

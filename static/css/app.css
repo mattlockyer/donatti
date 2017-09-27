@@ -5,10 +5,17 @@ a, a:hover, a:visited, a:link, a:active, a .md-whiteframe, a h3 {
   text-decoration: none;
 }
 
+body {
+  overflow-x:hidden;
+}
+
 .loader {
+  position:absolute;
+  top:25vh; left:0;
+  width:100%;
   text-align:center;
-  margin-top:25vh;
   transform:scale(0.5, 0.5);
+  z-index:9999;
 }
 
 .hidden {
@@ -21,4 +28,8 @@ a, a:hover, a:visited, a:link, a:active, a .md-whiteframe, a h3 {
 
 .padding-16 {
   padding:16px;
+}
+
+.margin-16 {
+  margin:16px;
 }

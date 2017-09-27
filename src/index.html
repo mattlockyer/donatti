@@ -71,11 +71,11 @@
       
       <router-view></router-view>
       
-      <md-snackbar ref="snackbar" md-position="bottom center" md-duration="3000">
-        <span>{{ snackbarMessage }}</span>
-      </md-snackbar>
-      
     </div>
+    
+    <md-snackbar ref="snackbar" md-position="bottom center" :md-duration="snackbar.duration">
+      <span>{{ snackbar.message }}</span>
+    </md-snackbar>
     
   </div>
 

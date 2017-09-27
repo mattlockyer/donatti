@@ -1,9 +1,12 @@
+
+
 export default {
 
   data() {
     return {
       dons: [],
-      test: true
+      test: true,
+      loaded: false
     };
   },
 
@@ -11,8 +14,13 @@ export default {
     APP.updateDons(() => {
       this.dons = APP.donList;
       this.$forceUpdate();
-      console.log('updated', this.dons.length);
+      this.loaded = true;
+      this.$root.hideLoader();
     });
+  },
+  
+  mounted() {
+    this.$root.showLoader();
   },
 
   methods: {
@@ -54,7 +62,7 @@ export default {
           </div>
           
           
-          <div v-else>
+          <div v-else-if="loaded">
             <p>You currently have no Dons, try creating a Don by clicking below</p>
             <md-layout md-align="center">
               <router-link to="/create"><md-button class="md-raised">Create</md-button></router-link>

@@ -13,6 +13,7 @@ export default {
       params: [],
       balance: 0,
       percent: 0,
+      goal: 0
     };
   },
   
@@ -38,6 +39,8 @@ export default {
       this.params = APP.donParams[id];
       if (refetch) this.params = APP.donParams[id] = await don.getParameters.call();
       
+      this.goal = this.params[5].toNumber();
+      
       this.updateBalance();
       
       //force update
@@ -52,7 +55,7 @@ export default {
       this.balance = (await APP.currentDon.balance.call()).toNumber();
       this.percent = this.balance / this.params[5].toNumber() * 100;
       
-      console.log(this.percent);
+      console.log(this.balance);
     }
     //jshint ignore: end
   },
@@ -63,15 +66,20 @@ export default {
         <md-layout md-flex="80" md-align="center">
             
           <md-layout md-flex="100" md-align="center">
-            <h2>{{ this.params[0] }}</h2>
+            <h2>{{ params[0] }}</h2>
           </md-layout>
             
           <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">
+          
             <md-whiteframe elevation="1" class="width-100 padding-16">
-              <md-progress md-theme="second" :md-progress="percent"></md-progress>
+              <md-progress v-if="goal !== 0" md-theme="second" :md-progress="percent">
+              </md-progress>
+              <h4>
+                Contributions: {{ balance }} <span v-if="this.goal !== 0">/ {{ goal }}</span>
+              </h4>
             </md-whiteframe>
             
-            <md-button class="md-raised" v-on:click="contribute">Contribute</md-button>
+            <md-button class="md-raised margin-16" v-on:click="contribute">Contribute</md-button>
             
           </md-layout>
         

@@ -12,19 +12,29 @@ export default {
   
   
   created() {
-    
+      console.log(this.$root);
   },
   
   methods: {
     //jshint ignore: start
     async submit(params) {
       
-      
+      //show loader
+      this.$root.showLoader();
+      //explain to user what's going to happen
+      this.$root.snack('Please accept the transaction and we will redirect you when your Don is created', 4000);
+      //create the don from the form params
       const tx = await APP.donatti.create(...params, {
         from: APP.account,
         value: 0,
-        gas: 4000000
+        gas: 2000000 //2 million gas should be plenty
       });
+      
+      //simulate blockchain delay
+      setTimeout(() => {
+        this.$root.hideLoader();
+        this.$root.router.push('/dons');
+      }, 5000);
       
     },
     //jshint ignore: end

@@ -51,7 +51,10 @@ const VueApp = new Vue({
   data: {
     router,
     menu: router.options.routes,
-    snackbarMessage: 'message'
+    snackbar: {
+      message: 'message',
+      duration: 3000
+    }
   },
   
   watch: {
@@ -76,14 +79,21 @@ const VueApp = new Vue({
   },
   
   methods: {
+    showLoader() {
+      this.$refs.loader.classList.remove('hidden');
+    },
+    hideLoader() {
+      this.$refs.loader.classList.add('hidden');
+    },
     closeNav() {
       this.$refs.leftSidenav.close();
     },
     toggleNav() {
       this.$refs.leftSidenav.toggle();
     },
-    snack(msg) {
-      this.snackbarMessage = msg;
+    snack(msg, dur = 3000) {
+      this.snackbar.message = msg;
+      this.snackbar.duration = dur;
       if (!this.$refs.snackbar.active) this.$refs.snackbar.open();
     },
   }
