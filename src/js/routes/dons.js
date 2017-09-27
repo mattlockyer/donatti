@@ -11,6 +11,7 @@ export default {
   },
 
   created() {
+    this.$root.title = 'My Dons';
     APP.updateDons(() => {
       this.dons = APP.donList;
       this.$forceUpdate();
@@ -34,7 +35,6 @@ export default {
         
           
           <div v-if="dons.length > 0">
-            <h2>Create a Donatti</h2>
             
             <md-table>
               <md-table-header>

@@ -12,7 +12,7 @@ export default {
   
   
   created() {
-      console.log(this.$root);
+    this.$root.title = 'Create a Donatti'
   },
   
   methods: {
@@ -43,10 +43,6 @@ export default {
   template: `
     <div class="page">
       <md-layout md-align="center" :md-gutter="true">
-      
-        <md-layout md-flex="100" md-align="center">
-          <h2>Create a Donatti</h2>
-        </md-layout>
           
         <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">
           <md-whiteframe elevation="1" class="width-100 padding-16">

@@ -54,7 +54,8 @@ const VueApp = new Vue({
     snackbar: {
       message: 'message',
       duration: 3000
-    }
+    },
+    title: 'Donatti'
   },
   
   watch: {

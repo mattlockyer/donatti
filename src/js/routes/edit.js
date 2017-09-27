@@ -19,9 +19,8 @@ export default {
   },
   
   created() {
-    //jshint ignore: start
+    this.$root.title = 'Edit Don';
     APP.updateDons(this.load);
-    //jshint ignore: end
   },
   
   methods: {
@@ -51,10 +50,6 @@ export default {
     <div class="page">
       <md-layout md-align="center" :md-gutter="true">
         <md-layout md-flex="80" md-align="center">
-            
-          <md-layout md-flex="100" md-align="center">
-            <h2>Donatti</h2>
-          </md-layout>
             
           <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">
             <md-whiteframe elevation="1" class="width-100 padding-16">

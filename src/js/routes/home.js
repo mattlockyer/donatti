@@ -2,6 +2,10 @@
 
 export default {
   
+  created() {
+    this.$root.title = 'Donatti';
+  },
+  
   template: `
     <div class="page">
       <md-layout md-align="center" :md-gutter="true">

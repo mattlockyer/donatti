@@ -17,7 +17,6 @@ export default {
   },
   
   mounted() {
-    console.log(this.id);
     flatpickr('.date-picker', { enableTime: true });
   },
   
