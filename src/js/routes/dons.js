@@ -12,16 +12,16 @@ export default {
 
   created() {
     this.$root.title = 'My Dons';
+  },
+  
+  mounted() {
+    this.$root.showLoader();
     APP.updateDons(() => {
       this.dons = APP.donList;
       this.$forceUpdate();
       this.loaded = true;
       this.$root.hideLoader();
     });
-  },
-  
-  mounted() {
-    this.$root.showLoader();
   },
 
   methods: {
@@ -40,7 +40,7 @@ export default {
               <md-table-header>
                 <md-table-row>
                   <md-table-head>Name</md-table-head>
-                  <md-table-head>Address</md-table-head>
+                  <md-table-head>ID</md-table-head>
                   <md-table-head></md-table-head>
                   <md-table-head></md-table-head>
                 </md-table-row>

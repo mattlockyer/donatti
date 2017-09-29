@@ -1,48 +1,18 @@
 
 
 //app.js
+import donatti from './donatti';
 import router from './router';
 import Theme from './theme';
-import utils from './web3-utils';
-
-import Donatti from '../../build/contracts/Donatti';
-import Don from '../../build/contracts/Don';
 
 Vue.use(VueRouter);
 Vue.use(VueMaterial);
 
 Theme.init();
 
-const APP = window.APP = {
-  donMap: {},
-  donParams: {},
-  donList: [],
-  //jshint ignore: start
-  updateDons: async (cb) => {
-    //might not have contract yet
-    if (!APP.initialized) {
-      setTimeout(() => APP.updateDons(cb), 250);
-      return;
-    }
-    //get dons
-    const dons = await APP.donatti.getDons.call();
-    //grab each don instance
-    for (let i in dons) {
-      const addr = dons[i];
-      const don = await utils.getContract(Don, addr);
-      const params = await don.getParameters.call();
-      if (!APP.donMap[addr]) {
-        don.i = i;
-        APP.donMap[addr] = don;
-        APP.donParams[addr] = params;
-        APP.donList.push(addr);
-      }
-    }
-    //callback
-    if (cb) cb();
-  }
-  //jshint ignore: end
-};
+/**************************************
+* VUE APP
+**************************************/
 
 const VueApp = new Vue({
   el: '#app',
@@ -66,11 +36,8 @@ const VueApp = new Vue({
   
   //jshint ignore: start
   async created() {
-    utils.getWeb3();
-    APP.account = (await utils.getAccounts())[0];
-    APP.donatti = await utils.getContract(Donatti);
-    APP.initialized = true;
-    APP.updateDons();
+    console.log(APP);
+    APP.init();
   },
   //jshint ignore: end
   

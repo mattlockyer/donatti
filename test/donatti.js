@@ -5,17 +5,21 @@
 const Donatti = artifacts.require("./Donatti.sol");
 const Don = artifacts.require("./Don.sol");
 
+/**************************************
+* Helpers
+**************************************/
 const promisify = (inner) => new Promise((resolve, reject) =>
   inner((err, res) => {
     if (err) { reject(err) }
     resolve(res);
   })
 );
-
 const getBalance = (account, at) => promisify(cb => web3.eth.getBalance(account, at, cb));
-
 const timeout = ms => new Promise(res => setTimeout(res, ms))
 
+/**************************************
+* Tests
+**************************************/
 contract('Donatti', function(accounts) {
   
   let donatti, don;
@@ -37,16 +41,21 @@ contract('Donatti', function(accounts) {
       from: owner,
       gas: 4000000
     });
-    don = await Don.at(await donatti.dons.call(0));
-    
+    const dons = await donatti.getDons.call();
+    don = await Don.at(dons[0][0]);
     assert(don !== undefined, "don wasn't deployed");
+  });
+  
+  it("should be able to get dons", async () => {
+    const dons = await donatti.getDons.call();
+    assert(dons[0].length === 1, "dons length doesn't match");
   });
   
   //pay with default
   
   it("should be able to pay a don using default", async () => {
     const tx = await don.send(1000, { from: owner });
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     assert(balance === 1000, "don balance doesn't match");
   });
   
@@ -57,7 +66,7 @@ contract('Donatti', function(accounts) {
   it("EXCEPTION: should NOT pay past goal using default", async () => {
     const tx = don.send(1000, { from: owner });
     tx.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance !== 2000, "don balance increased");
   });
@@ -71,7 +80,7 @@ contract('Donatti', function(accounts) {
     params[5] = 2000;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance === 2000, "don balance doesn't match");
   });
@@ -81,7 +90,7 @@ contract('Donatti', function(accounts) {
     params[2] = true;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance === 3000, "don balance doesn't match");
   });
@@ -92,7 +101,7 @@ contract('Donatti', function(accounts) {
     const tx = await don.update(...params);
     const tx2 = don.send(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance !== 4000, "don balance increased");
   });
@@ -102,7 +111,7 @@ contract('Donatti', function(accounts) {
     params[1] = true;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance === 4000, "don balance doesn't match");
   });
@@ -117,7 +126,7 @@ contract('Donatti', function(accounts) {
     const tx = await don.update(...params);
     const tx2 = don.send(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
 
     assert(balance !== 5000, "don balance increased");
   });
@@ -128,7 +137,7 @@ contract('Donatti', function(accounts) {
     params[3] = Math.floor((Date.now() / 1000)) - 1000;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance === 5000, "don balance doesn't match");
   });
@@ -143,7 +152,7 @@ contract('Donatti', function(accounts) {
     const tx = await don.update(...params);
     const tx2 = don.send(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
 
     assert(balance !== 6000, "don balance increased");
   });
@@ -153,7 +162,7 @@ contract('Donatti', function(accounts) {
     params[4] = Math.floor((Date.now() / 1000)) + 1000;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await don.getBalance.call()).toNumber();
+    const balance = (await getBalance(don.address)).toNumber();
     
     assert(balance === 6000, "don balance doesn't match");
   });
@@ -164,7 +173,7 @@ contract('Donatti', function(accounts) {
   it("withdraw the balance", async () => {
     
     const rb1 = (await getBalance(random));
-    const balance = (await don.getBalance.call()).toString();
+    const balance = (await getBalance(don.address)).toString();
     const tx = await don.withdraw(random);
     await timeout(250);
     const rb2 = (await getBalance(random));
@@ -176,8 +185,8 @@ contract('Donatti', function(accounts) {
   it("withdraw the fee", async () => {
     
     const rb1 = (await getBalance(random));
-    const fee = (await don.getBalance.call()).toNumber(); //fee is all that's left
-    const tx = await donatti.collectFee(0, { from: owner });
+    const fee = (await getBalance(don.address)).toNumber(); //fee is all that's left
+    const tx = await donatti.collectFees([0], { from: owner });
     await timeout(250);
     const tx2 = await donatti.withdraw(random);
     await timeout(250);

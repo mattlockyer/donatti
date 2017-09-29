@@ -20,6 +20,9 @@ export default {
   
   created() {
     this.$root.title = 'Edit Don';
+  },
+  
+  mounted() {
     APP.updateDons(this.load);
   },
   

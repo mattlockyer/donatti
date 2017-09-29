@@ -86,6 +86,17 @@ const deployContract = (json, from, gas) => {
   });
 };
 /**************************************
+* Helpers
+**************************************/
+const promisify = (inner) => new Promise((resolve, reject) =>
+  inner((err, res) => {
+    if (err) { reject(err) }
+    resolve(res);
+  })
+);
+const getBalance = (account, at) => promisify(cb => web3.eth.getBalance(account, at, cb));
+const timeout = ms => new Promise(res => setTimeout(res, ms));
+/**************************************
 * Exports
 **************************************/
 export default {
@@ -94,5 +105,7 @@ export default {
   getNetwork,
   getAccounts,
   getContract,
-  deployContract
+  deployContract,
+  getBalance,
+  timeout
 };

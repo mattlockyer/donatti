@@ -1,6 +1,7 @@
 
 
 import DonForm from '../components/don-form';
+import utils from '../web3-utils';
 
 export default {
   
@@ -24,6 +25,9 @@ export default {
   
   created() {
     this.$root.title = 'Contribute';
+  },
+  
+  mounted() {
     APP.updateDons(this.load);
   },
   
@@ -60,7 +64,7 @@ export default {
       this.updateBalance();
     },
     async updateBalance() {
-      this.balance = (await APP.currentDon.getBalance.call()).toNumber();
+      this.balance = (await utils.getBalance(APP.currentDon.address)).toNumber();
       this.percent = this.balance / this.params[5].toNumber() * 100;
     }
     //jshint ignore: end
