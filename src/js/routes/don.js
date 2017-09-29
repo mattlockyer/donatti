@@ -52,14 +52,15 @@ export default {
         return;
       }
       const value = parseInt(this.value);
-      const tx = await APP.currentDon.pay(value, {
+      const tx = await APP.currentDon.sendTransaction({
+        value,
         from: APP.account
       });
       this.$root.snack('Contribution Made');
       this.updateBalance();
     },
     async updateBalance() {
-      this.balance = (await APP.currentDon.balance.call()).toNumber();
+      this.balance = (await APP.currentDon.getBalance.call()).toNumber();
       this.percent = this.balance / this.params[5].toNumber() * 100;
     }
     //jshint ignore: end

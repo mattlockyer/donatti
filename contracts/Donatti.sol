@@ -9,19 +9,14 @@ import './Don.sol';
 
 contract Donatti is Ownable {
   
-  //private
-  uint256 private balance;
-  address private owner;
-  
-  Don[] public dons;
+  address[] public dons;
   mapping(address => address[]) public donMap;
   
-  //constructor
-  function Donatti() {}
+  function() payable {}
   
   //create a new contract
   function create(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal) {
-    Don don = new Don();
+    Don don = new Don(this);
     don.update(_name, _open, _over, _start, _end, _goal);
     don.transferOwnership(msg.sender);
     donMap[msg.sender].push(don);
@@ -33,10 +28,15 @@ contract Donatti is Ownable {
   }
   
   /**************************************
-  * Owner methods
+  * Only Owner
   **************************************/
-  function getBalance() onlyOwner returns(uint256) {
-    return balance;
+  
+  function withdraw(address _dest) onlyOwner returns(uint256) {
+    _dest.transfer(this.balance);
+  }
+  
+  function collectFee(uint256 _from) onlyOwner returns(uint256) {
+    Don(dons[_from]).withdrawFee(this);
   }
     
 }

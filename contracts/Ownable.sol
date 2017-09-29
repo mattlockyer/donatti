@@ -22,7 +22,6 @@ contract Ownable {
   function transferOwnership(address _owner) onlyOwner {
     owner = _owner;
   }
-
 }
 
 //jshint ignore: end
