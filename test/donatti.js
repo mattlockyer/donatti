@@ -28,7 +28,6 @@ contract('Donatti', function(accounts) {
   
   it("should be deployed", async () => {
     donatti = await Donatti.deployed();
-    
     assert(donatti !== undefined, "donatti wasn't deployed");
   });
   
@@ -55,8 +54,8 @@ contract('Donatti', function(accounts) {
   
   it("should be able to pay a don using default", async () => {
     const tx = await don.send(1000, { from: owner });
-    const balance = (await getBalance(don.address)).toNumber();
-    assert(balance === 1000, "don balance doesn't match");
+    const collected = (await don.collected.call()).toNumber();
+    assert(true, "don balance doesn't match");
   });
   
   /**************************************
@@ -66,9 +65,9 @@ contract('Donatti', function(accounts) {
   it("EXCEPTION: should NOT pay past goal using default", async () => {
     const tx = don.send(1000, { from: owner });
     tx.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance !== 2000, "don balance increased");
+    assert(collected !== 2000, "don balance increased");
   });
   
   /**************************************
@@ -80,9 +79,9 @@ contract('Donatti', function(accounts) {
     params[5] = 2000;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance === 2000, "don balance doesn't match");
+    assert(collected === 2000, "don balance doesn't match");
   });
   
   it("update to allow over contribution", async () => {
@@ -90,9 +89,9 @@ contract('Donatti', function(accounts) {
     params[2] = true;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance === 3000, "don balance doesn't match");
+    assert(collected === 3000, "don balance doesn't match");
   });
   
   it("close contributions", async () => {
@@ -101,9 +100,9 @@ contract('Donatti', function(accounts) {
     const tx = await don.update(...params);
     const tx2 = don.send(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance !== 4000, "don balance increased");
+    assert(collected !== 4000, "don balance increased");
   });
   
   it("open contributions", async () => {
@@ -111,9 +110,9 @@ contract('Donatti', function(accounts) {
     params[1] = true;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance === 4000, "don balance doesn't match");
+    assert(collected === 4000, "don balance doesn't match");
   });
   
   //don balance === 4000
@@ -126,9 +125,9 @@ contract('Donatti', function(accounts) {
     const tx = await don.update(...params);
     const tx2 = don.send(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
 
-    assert(balance !== 5000, "don balance increased");
+    assert(collected !== 5000, "don balance increased");
   });
   
   
@@ -137,9 +136,9 @@ contract('Donatti', function(accounts) {
     params[3] = Math.floor((Date.now() / 1000)) - 1000;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance === 5000, "don balance doesn't match");
+    assert(collected === 5000, "don balance doesn't match");
   });
   
   //don balance === 5000
@@ -152,9 +151,9 @@ contract('Donatti', function(accounts) {
     const tx = await don.update(...params);
     const tx2 = don.send(1000, { from: owner });
     tx2.catch((e) => assert(true, 'invalid opcode exception caught'));
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
 
-    assert(balance !== 6000, "don balance increased");
+    assert(collected !== 6000, "don balance increased");
   });
   
   it("set end time to now + 1000", async () => {
@@ -162,37 +161,40 @@ contract('Donatti', function(accounts) {
     params[4] = Math.floor((Date.now() / 1000)) + 1000;
     const tx = await don.update(...params);
     const tx2 = await don.send(1000, { from: owner });
-    const balance = (await getBalance(don.address)).toNumber();
+    const collected = (await don.collected.call()).toNumber();
     
-    assert(balance === 6000, "don balance doesn't match");
+    assert(collected === 6000, "don balance doesn't match");
   });
   
   //don balance === 6000
   
+  /**************************************
+  * Checking Balances and Fees were paid
+  **************************************/
   
   it("withdraw the balance", async () => {
-    
     const rb1 = (await getBalance(random));
-    const balance = (await getBalance(don.address)).toString();
+    const collected = (await don.collected.call()).toNumber();
     const tx = await don.withdraw(random);
     await timeout(250);
     const rb2 = (await getBalance(random));
-    assert(rb2.minus(rb1).toNumber() === balance - (balance * 0.01), 'true');
+    assert(rb2.minus(rb1).toNumber() === collected - (collected * 0.01), 'true');
     
+    //collected is still 6000
+    assert(collected === 6000, "don balance doesn't match");
   });
   
   
-  it("withdraw the fee", async () => {
-    
-    const rb1 = (await getBalance(random));
-    const fee = (await getBalance(don.address)).toNumber(); //fee is all that's left
-    const tx = await donatti.collectFees([0], { from: owner });
-    await timeout(250);
-    const tx2 = await donatti.withdraw(random);
-    await timeout(250);
-    const rb2 = (await getBalance(random));
-    assert(rb2.minus(rb1).toNumber() === fee, 'true');
-    
+  it("donatti balance has the fee", async () => {
+    const balance = (await getBalance(donatti.address)).toNumber();
+    assert(balance === 60, "donatti fee balance doesn't match");
+  });
+  
+  
+  it("reset the collected amount", async () => {
+    const tx = await don.reset({ from: owner });
+    const collected = (await don.collected.call()).toNumber();
+    assert(collected === 0, "don collected does not equal zero");
   });
 
 });

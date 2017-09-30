@@ -7,33 +7,31 @@ pragma solidity ^0.4.11;
 import './Ownable.sol';
 
 contract Don is Ownable {
-
-  //donatti
-  address public donatti;
-  uint256 public fee;
   
-  string public name;
-  bool public open; //open or closed
-  bool public over; //allow overcontributing
-  uint256 public start;
-  uint256 public end;
-  uint256 public goal;
+  //collected
+  uint256 public collected;
+  
+  //donatti
+  address private donatti;
+  
+  //params
+  string private name;
+  bool private open; //open or closed
+  bool private over; //allow over collecting
+  uint256 private start;
+  uint256 private end;
+  uint256 private goal;
   
   /**************************************
   * Modifiers
   **************************************/
-  modifier isOpen(uint256 value) {
-    require(open && (over || goal == 0 || this.balance - value < goal) && (now > start && now < end));
-    _;
-  }
-  
-  modifier onlyDonatti() {
-    require(msg.sender == donatti);
+  modifier isOpen() {
+    require(open && (over || goal == 0 || collected < goal) && (now > start && now < end));
     _;
   }
   
   /**************************************
-  * Functions
+  * Public Functions
   **************************************/
   function Don(address _donatti) {
     donatti = _donatti;
@@ -46,8 +44,9 @@ contract Don is Ownable {
   /**************************************
   * Payable
   **************************************/
-  function() payable isOpen(msg.value) {
-    fee += (msg.value - (msg.value % 100)) / 100;
+  function() payable isOpen {
+    collected += msg.value;
+    donatti.transfer((msg.value - (msg.value % 100)) / 100);
   }
   
   /**************************************
@@ -62,16 +61,12 @@ contract Don is Ownable {
     goal = _goal;
   }
   
-  function withdraw(address _dest) onlyOwner {
-    _dest.transfer(this.balance - fee);
+  function reset() onlyOwner {
+    collected = 0;
   }
   
-  /**************************************
-  * Only Donatti Functions
-  **************************************/
-  function withdrawFee(address _dest) onlyDonatti {
-    _dest.transfer(fee);
-    fee = 0;
+  function withdraw(address _dest) onlyOwner {
+    _dest.transfer(this.balance);
   }
   
 }

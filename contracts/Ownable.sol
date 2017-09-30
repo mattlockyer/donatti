@@ -8,13 +8,11 @@ contract Ownable {
   
   address public owner;
   
-  //modifiers
   modifier onlyOwner() {
     require(msg.sender == owner);
     _;
   }
 
-  //constructor
   function Ownable() {
     owner = msg.sender;
   }
@@ -22,6 +20,7 @@ contract Ownable {
   function transferOwnership(address _owner) onlyOwner {
     owner = _owner;
   }
+  
 }
 
 //jshint ignore: end

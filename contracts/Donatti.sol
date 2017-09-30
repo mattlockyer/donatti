@@ -39,12 +39,6 @@ contract Donatti is Ownable {
   function withdraw(address _dest) onlyOwner returns(uint256) {
     _dest.transfer(this.balance);
   }
-  
-  function collectFees(uint256[] _from) onlyOwner returns(uint256) {
-    for (uint i = 0; i < _from.length; i++) {
-      Don(dons[_from[i]]).withdrawFee(this);
-    }
-  }
 }
 
 //jshint ignore: end
