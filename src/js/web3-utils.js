@@ -36,6 +36,7 @@ const getNetwork = (web3 = window.web3) => new Promise((resolve, reject) => {
       case 2: name = 'morden'; break;
       case 3: name = 'ropsten'; break;
       case 4: name = 'rinkeby'; break;
+      case 42: name = 'kovan'; break;
       default: name = 'localhost';
     }
     console.log('The network is:', name, id);

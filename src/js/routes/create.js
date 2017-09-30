@@ -10,7 +10,6 @@ export default {
     'don-form': DonForm
   },
   
-  
   created() {
     this.$root.title = 'Create a Donatti'
   },
@@ -30,11 +29,22 @@ export default {
         gas: 2000000 //2 million gas should be plenty
       });
       
-      //simulate blockchain delay
-      setTimeout(() => {
-        this.$root.hideLoader();
-        this.$root.router.push('/dons');
-      }, 5000);
+      
+      /**************************************
+      * TODO WAIT FOR CONFIRMATION
+      **************************************/
+      
+      APP.updateDons();
+      
+      //should wait for tx to return from Kovan
+      this.$root.hideLoader();
+      this.$root.router.push('/dons');
+      
+      //debug simulate blockchain delay
+      // setTimeout(() => {
+      //   this.$root.hideLoader();
+      //   this.$root.router.push('/dons');
+      // }, 5000);
       
     },
     //jshint ignore: end

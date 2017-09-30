@@ -28,7 +28,7 @@ export default {
   },
   
   mounted() {
-    APP.updateDons(this.load);
+    APP.getDons(this.load);
   },
   
   methods: {

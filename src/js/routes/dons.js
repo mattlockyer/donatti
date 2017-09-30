@@ -16,7 +16,7 @@ export default {
   
   mounted() {
     this.$root.showLoader();
-    APP.updateDons(() => {
+    APP.getDons(() => {
       this.dons = APP.donList;
       this.$forceUpdate();
       this.loaded = true;

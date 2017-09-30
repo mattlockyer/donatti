@@ -34,14 +34,8 @@ const VueApp = new Vue({
     }
   },
   
-  //jshint ignore: start
-  async created() {
-    console.log(APP);
-    APP.init();
-  },
-  //jshint ignore: end
-  
   mounted() {
+    APP.init();
     this.$refs.loader.classList.add('hidden');
     this.$refs.content.classList.remove('hidden');
   },
