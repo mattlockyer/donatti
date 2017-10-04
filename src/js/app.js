@@ -35,7 +35,7 @@ const VueApp = new Vue({
   },
   
   mounted() {
-    APP.init();
+    setTimeout(() => APP.init(), 500);
     this.$refs.loader.classList.add('hidden');
     this.$refs.content.classList.remove('hidden');
   },

@@ -1,6 +1,7 @@
 
 
 import DonForm from '../components/don-form';
+import utils from '../web3-utils';
 
 export default {
   
@@ -34,9 +35,9 @@ export default {
       const don = APP.currentDon = APP.donMap[id];
       if (!don) return;
       
-      //set params
+      //get params
       this.params = APP.donParams[id];
-      if (refetch) this.params = APP.donParams[id] = await don.getParameters.call();
+      if (refetch) this.params = await APP.getParams(don);
       
       //force update
       this.$forceUpdate();

@@ -37,7 +37,7 @@ gulp.task('babel', function() {
     .pipe(source('app.js'))
     .pipe(buffer())
     
-    .pipe(uglify())
+    //.pipe(uglify())
     
     .pipe(sourcemaps.init({loadMaps: true}))
     .on('error', gutil.log)

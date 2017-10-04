@@ -36,7 +36,7 @@ contract('Donatti', function(accounts) {
   **************************************/
   
   it("should be create a don", async () => {
-    const tx = await donatti.create("Test Don Box", true, false, 0, 999999999999, 1000, {
+    const tx = await donatti.create("Test Don Box", true, false, 0, 999999999999, 1000, 'https://mywickedsite.com', {
       from: owner,
       gas: 4000000
     });
@@ -178,9 +178,8 @@ contract('Donatti', function(accounts) {
     const tx = await don.withdraw(random);
     await timeout(250);
     const rb2 = (await getBalance(random));
+    //got the balance with fees minused
     assert(rb2.minus(rb1).toNumber() === collected - (collected * 0.01), 'true');
-    
-    //collected is still 6000
     assert(collected === 6000, "don balance doesn't match");
   });
   

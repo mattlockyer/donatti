@@ -1,6 +1,5 @@
 
 
-import utils from '../web3-utils';
 import Don from '../../../build/contracts/Don';
 import DonForm from '../components/don-form';
 
@@ -11,12 +10,14 @@ export default {
   },
   
   created() {
-    this.$root.title = 'Create a Donatti'
+    this.$root.title = 'Create a Donatti';
   },
   
   methods: {
     //jshint ignore: start
     async submit(params) {
+      
+      console.log(params, APP.donatti);
       
       //show loader
       this.$root.showLoader();

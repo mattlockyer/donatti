@@ -1,4 +1,5 @@
 
+import utils from '../web3-utils';
 
 export default {
   
@@ -6,7 +7,7 @@ export default {
   
   data() {
     return {
-      stateParams: ['', true, false, '', '', '']
+      stateParams: ['', true, false, '', '', '', '']
     };
   },
   
@@ -33,18 +34,12 @@ export default {
       params[3] = Math.floor(new Date(params[3] ? params[3] : 0).getTime() / 1000); //start time
       params[4] = Math.floor(new Date(params[4] ? params[4] : 9999999999999).getTime() / 1000); //end time
       if (params[5] === '') params[5] = 0;
+      params[5] = utils.toWei(params[5]);
       
       this.parent.submit(params);
     },
     reset() {
-      const params = this.stateParams = this.params.slice();
-      
-      //check defaults for start, end, goal
-      if (params[3].toNumber() === 0) params[3] = '';
-      else params[3] = FlatpickrInstance.prototype.formatDate(new Date(params[3] * 1000), 'Y-m-d h:i');
-      if (params[4].toNumber() === 9999999999) params[4] = '';
-      else params[4] = FlatpickrInstance.prototype.formatDate(new Date(params[4] * 1000), 'Y-m-d h:i');
-      if (params[5].toNumber() === 0) params[5] = '';
+      this.stateParams = this.params.slice();
     }
   },
   
@@ -78,6 +73,11 @@ export default {
       <md-input-container md-theme="second">
         <label>Funding Goal</label>
         <md-input v-model="stateParams[5]" placeholder="Goal (default: unlimited)" type="number"></md-input>
+      </md-input-container>
+      
+      <md-input-container md-theme="second">
+        <label>Image</label>
+        <md-input v-model="stateParams[6]" placeholder="Image URL (optional)"></md-input>
       </md-input-container>
       
       <md-layout md-align="center">

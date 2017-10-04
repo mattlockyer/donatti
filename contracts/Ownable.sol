@@ -21,6 +21,10 @@ contract Ownable {
     owner = _owner;
   }
   
+  function withdraw(address _dest) onlyOwner {
+    _dest.transfer(this.balance);
+  }
+  
 }
 
 //jshint ignore: end

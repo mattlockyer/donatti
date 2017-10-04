@@ -12,10 +12,11 @@ const APP = window.APP = {
     url: 'https://kovan.infura.io/',
   },
   connectedNetwork: null,
-  contractAddress: '0xC92b4A07199422434E97541d6c081069797AAd95',
+  contractAddress: '0xcC958Aa9B8C72F6aCa889C94B0b45869d7d01d4f',
   //dons
   donMap: {},
   donParams: {},
+  donCollected: {},
   donList: [],
   dons: [],
   /**************************************
@@ -35,21 +36,28 @@ const APP = window.APP = {
     try {
       APP.accounts = await utils.getAccounts();
     } catch(e) {
-      APP.accounts = ['0x'];
+      APP.accounts = [null];
       //this.noAccount();
     }
-    
     //regular init
-    APP.account = (await utils.getAccounts())[0];
+    APP.account = APP.accounts[0];
     //remove for production
     APP.deploy = () => utils.deployContract(Donatti, APP.account, 4000000);
     //regular init
     APP.donatti = await utils.getContract(Donatti, APP.contractAddress);
     APP.initialized = true;
-    APP.updateDons();
+    APP.getUserDons();
   },
-  async updateDons() {
-    APP.donsLoaded = false;
+  /**************************************
+  * Loading a users dons
+  **************************************/
+  async getUserDons() {
+    //we have no user dons to get
+    if (!APP.account) {
+      APP.userDonsLoaded = true;
+      return;
+    }
+    APP.userDonsLoaded = false;
     //might not have contract yet
     if (!APP.initialized) {
       setTimeout(() => APP.updateDons(cb), 250);
@@ -64,24 +72,62 @@ const APP = window.APP = {
     for (let i in indicies) {
       const addr = addresses[i];
       const index = indicies[i].toNumber();
-      //check if we already have this don or don't need to update it
       if (!APP.donList.includes(index)) {
-        APP.donList.push(index);
-        const don = await utils.getContract(Don, addr);
-        const params = await don.getParameters.call();
-        APP.donMap[index] = don;
-        APP.donParams[index] = params;
+        await APP.loadDon(index, addr);
       }
     }
-    APP.donsLoaded = true;
+    APP.userDonsLoaded = true;
     console.log('dons loaded');
   },
+  async loadDon(id, addr) {
+    APP.donList.push(id);
+    if (!addr) addr = await APP.donatti.dons.call(id);
+    const don = await utils.getContract(Don, addr);
+    don.id = id;
+    APP.donMap[id] = don;
+    await APP.getParams(don);
+    await APP.getBalance(don);
+    return don;
+  },
+  /**************************************
+  * Loading the params of a don
+  **************************************/
+  async getParams(don) {
+    const params = await don.getParameters.call();
+  
+    //check defaults for start, end, goal
+    if (params[3].toNumber() === 0) params[3] = '';
+    else params[3] = FlatpickrInstance.prototype.formatDate(new Date(params[3] * 1000), 'Y-m-d h:i');
+    if (params[4].toNumber() === 9999999999) params[4] = '';
+    else params[4] = FlatpickrInstance.prototype.formatDate(new Date(params[4] * 1000), 'Y-m-d h:i');
+    if (params[5] === 0) params[5] = '';
+    else params[5] = utils.toEth(params[5]);
+    
+    APP.donParams[don.id] = params;
+    return params.slice();
+  },
+  getParamObject(params) {
+    const obj = {};
+    ['name', 'open', 'over', 'start', 'end', 'goal', 'url'].forEach((k, i) => obj[k] = params[i]);
+    return obj;
+  },
+  /**************************************
+  * Getting and caching the balance of a don
+  **************************************/
+  async getBalance(don) {
+    const collected = utils.toEth(await don.collected.call());
+    APP.donCollected[don.id] = collected
+    return collected;
+  },
+  //jshint ignore: end
+  /**************************************
+  * Callback for mounted components
+  **************************************/
   getDons(cb) {
-    if (!APP.donsLoaded) {
+    if (!APP.userDonsLoaded) {
       setTimeout(() => APP.getDons(cb), 50);
       return;
     }
     if (cb) cb();
   }
-  //jshint ignore: end
 };

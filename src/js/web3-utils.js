@@ -97,6 +97,8 @@ const promisify = (inner) => new Promise((resolve, reject) =>
 );
 const getBalance = (account, at) => promisify(cb => web3.eth.getBalance(account, at, cb));
 const timeout = ms => new Promise(res => setTimeout(res, ms));
+const toEth = (wei) => window.web3.fromWei(wei, 'ether').toNumber();
+const toWei = (eth) => window.web3.toWei(eth, 'ether');
 /**************************************
 * Exports
 **************************************/
@@ -108,5 +110,7 @@ export default {
   getContract,
   deployContract,
   getBalance,
-  timeout
+  timeout,
+  toEth,
+  toWei
 };

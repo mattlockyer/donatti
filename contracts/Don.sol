@@ -21,6 +21,8 @@ contract Don is Ownable {
   uint256 private start;
   uint256 private end;
   uint256 private goal;
+  //optional params
+  string private url;
   
   /**************************************
   * Modifiers
@@ -37,8 +39,8 @@ contract Don is Ownable {
     donatti = _donatti;
   }
   
-  function getParameters() constant returns (string, bool, bool, uint256, uint256, uint256) {
-    return (name, open, over, start, end, goal);
+  function getParameters() constant returns (string, bool, bool, uint256, uint256, uint256, string) {
+    return (name, open, over, start, end, goal, url);
   }
   
   /**************************************
@@ -52,21 +54,18 @@ contract Don is Ownable {
   /**************************************
   * Only Owner Functions
   **************************************/
-  function update(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal) onlyOwner {
+  function update(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal, string _url) onlyOwner {
     name = _name;
     open = _open;
     over = _over;
     start = _start;
     end = _end;
     goal = _goal;
+    url = _url;
   }
   
   function reset() onlyOwner {
     collected = 0;
-  }
-  
-  function withdraw(address _dest) onlyOwner {
-    _dest.transfer(this.balance);
   }
   
 }
