@@ -16,6 +16,7 @@ const APP = window.APP = {
   //dons
   donMap: {},
   donParams: {},
+  donParamsObj: {},
   donCollected: {},
   donList: [],
   dons: [],
@@ -27,7 +28,7 @@ const APP = window.APP = {
     utils.getWeb3(APP.network.url);
     //get network
     const network = APP.connectedNetwork = await utils.getNetwork();
-    console.log(network);
+    //console.log(network);
     if (network.id !== APP.network.id) {
       console.log('MetaMask: wrong network');
       utils.setWeb3(APP.network.url);
@@ -77,7 +78,7 @@ const APP = window.APP = {
       }
     }
     APP.userDonsLoaded = true;
-    console.log('dons loaded');
+    //console.log('dons loaded');
   },
   async loadDon(id, addr) {
     APP.donList.push(id);
@@ -95,20 +96,25 @@ const APP = window.APP = {
   async getParams(don) {
     const params = await don.getParameters.call();
   
-    //check defaults for start, end, goal
+    //formatting dates
     if (params[3].toNumber() === 0) params[3] = '';
     else params[3] = FlatpickrInstance.prototype.formatDate(new Date(params[3] * 1000), 'Y-m-d h:i');
     if (params[4].toNumber() === 9999999999) params[4] = '';
     else params[4] = FlatpickrInstance.prototype.formatDate(new Date(params[4] * 1000), 'Y-m-d h:i');
+    //goal
+    params[5] = utils.toEth(params[5]);
     if (params[5] === 0) params[5] = '';
-    else params[5] = utils.toEth(params[5]);
-    
+    //params
     APP.donParams[don.id] = params;
+    APP.donParamsObj[don.id] = APP.getParamObj(params);
     return params.slice();
   },
-  getParamObject(params) {
+  getParamObj(params) {
     const obj = {};
     ['name', 'open', 'over', 'start', 'end', 'goal', 'url'].forEach((k, i) => obj[k] = params[i]);
+    if (obj.start === '') obj.start = 'begun';
+    if (obj.end === '') obj.end = 'never';
+    if (obj.goal === '') obj.goal = 'unlimited';
     return obj;
   },
   /**************************************

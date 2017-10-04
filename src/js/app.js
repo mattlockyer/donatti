@@ -36,16 +36,18 @@ const VueApp = new Vue({
   
   mounted() {
     setTimeout(() => APP.init(), 500);
-    this.$refs.loader.classList.add('hidden');
-    this.$refs.content.classList.remove('hidden');
+    this.hideLoader();
+    this.$refs.snackWrap.classList.remove('hidden');
   },
   
   methods: {
     showLoader() {
       this.$refs.loader.classList.remove('hidden');
+      this.$refs.content.classList.add('hidden');
     },
     hideLoader() {
       this.$refs.loader.classList.add('hidden');
+      this.$refs.content.classList.remove('hidden');
     },
     closeNav() {
       this.$refs.leftSidenav.close();

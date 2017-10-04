@@ -73,9 +73,11 @@
       
     </div>
     
-    <md-snackbar ref="snackbar" md-position="bottom center" :md-duration="snackbar.duration">
-      <span>{{ snackbar.message }}</span>
-    </md-snackbar>
+    <div ref="snackWrap" class="hidden">
+      <md-snackbar ref="snackbar" md-position="bottom center" :md-duration="snackbar.duration">
+        <span>{{ snackbar.message }}</span>
+      </md-snackbar>
+    </div>
     
   </div>
 

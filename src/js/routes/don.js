@@ -41,13 +41,10 @@ export default {
       APP.currentDon = don;
 
       //get params
-      this.params = APP.donParams[id];
-      if (refetch) this.params = await APP.getParams(don);
-      this.params = APP.getParamObject(this.params);
-      
+      if (refetch) await APP.getParams(don);
+      this.params = APP.donParamsObj[id];
       
       this.updateBalance();
-      
       //force update
       this.$forceUpdate();
     },

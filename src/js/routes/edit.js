@@ -43,7 +43,9 @@ export default {
       this.$forceUpdate();
     },
     async submit(params) {
+      this.$root.showLoader();
       const tx = await APP.currentDon.update(...params, { from: APP.account });
+      this.$root.hideLoader();
       this.$root.snack('Donatti Updated');
       this.load(true);
     }
