@@ -27,6 +27,7 @@ export default {
   },
   
   mounted() {
+    this.$root.showLoader(true);
     APP.getDons(this.load);
   },
   
@@ -45,6 +46,9 @@ export default {
       this.params = APP.donParamsObj[id];
       
       this.updateBalance();
+      
+      //hide the loader
+      this.$root.hideLoader(true);
       //force update
       this.$forceUpdate();
     },
@@ -64,6 +68,7 @@ export default {
     async updateBalance() {
       this.balance = await APP.getBalance(APP.currentDon);
       this.percent = this.balance / this.params.goal * 100;
+      this.balanceUSD = utils.toUSD(this.balance);
     }
     //jshint ignore: end
   },
@@ -84,6 +89,9 @@ export default {
         </md-progress>
         <h4>
           Contributions: {{ balance }} <span v-if="params.goal !== 0">/ {{ params.goal }}</span>
+        </h4>
+        <h4>
+          Total USD Raised: \${{ this.balanceUSD }}
         </h4>
         <p v-if="params.start && params.start.length !== 0" >Start {{ params.start }}</p>
         <p v-if="params.end && params.end.length !== 0" >End {{ params.end }}</p>

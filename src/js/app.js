@@ -25,7 +25,8 @@ const VueApp = new Vue({
       message: 'message',
       duration: 3000
     },
-    title: 'Donatti'
+    title: 'Donatti',
+    routeLoader: false
   },
   
   watch: {
@@ -36,16 +37,19 @@ const VueApp = new Vue({
   
   mounted() {
     setTimeout(() => APP.init(), 500);
-    this.hideLoader();
     this.$refs.snackWrap.classList.remove('hidden');
+    this.hideLoader();
   },
   
   methods: {
-    showLoader() {
+    showLoader(routeLoader = false) {
+      this.routeLoader = routeLoader;
       this.$refs.loader.classList.remove('hidden');
       this.$refs.content.classList.add('hidden');
     },
-    hideLoader() {
+    hideLoader(routeLoader = false) {
+      if (this.routeLoader && !routeLoader) return;
+      this.routeLoader = false;
       this.$refs.loader.classList.add('hidden');
       this.$refs.content.classList.remove('hidden');
     },
