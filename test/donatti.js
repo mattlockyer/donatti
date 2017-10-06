@@ -36,7 +36,13 @@ contract('Donatti', function(accounts) {
   **************************************/
   
   it("should be create a don", async () => {
-    const tx = await donatti.create("Test Don Box", true, false, 0, 999999999999, 1000, 'https://mywickedsite.com', {
+    
+    const args = ["Test Don Box", true, false, 0, 999999999999, 1000, 'https://mywickedsite.com'];
+    
+    const estimate = await donatti.create.estimateGas(...args);
+    console.log(estimate);
+    
+    const tx = await donatti.create(...args, {
       from: owner,
       gas: 4000000
     });

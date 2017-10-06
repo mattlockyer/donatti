@@ -52,16 +52,10 @@ export default {
   },
   
   template: `
-    <div class="page">
-      <md-layout md-align="center" :md-gutter="true">
-          
-        <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">
-          <md-whiteframe elevation="1" class="width-100 padding-16">
-            <don-form :parent="this"></don-form>
-          </md-whiteframe>
-        </md-layout>
-        
-      </md-layout>
-    </div>
+    <md-layout md-flex="50" md-flex-small="70" md-flex-xsmall="100" md-align="center">
+      <md-whiteframe elevation="1" class="width-100 padding-16">
+        <don-form :parent="this"></don-form>
+      </md-whiteframe>
+    </md-layout>
   `
 };

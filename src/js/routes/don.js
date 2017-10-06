@@ -69,43 +69,41 @@ export default {
   },
   
   template: `
-    <div class="page">
-      <md-layout md-align="center" :md-gutter="true">
-        <md-layout md-flex="80" md-align="center">
-            
-          <md-layout md-flex="50" md-flex-xsmall="90" md-align="center">
-          
-            <h2>{{ params.name }}</h2>
-          
-            <md-whiteframe elevation="1" class="width-100 padding-16">
-              <md-progress v-if="params.goal !== 0" md-theme="second" :md-progress="percent">
-              </md-progress>
-              <h4>
-                Contributions: {{ balance }} <span v-if="params.goal !== 0">/ {{ params.goal }}</span>
-              </h4>
-              <p v-if="params.start && params.start.length !== 0" >Start {{ params.start }}</p>
-              <p v-if="params.end && params.end.length !== 0" >End {{ params.end }}</p>
-            </md-whiteframe>
-            
-            <div class="margin-16 padding-16">
-            
-               <form novalidate @submit.stop.prevent="submit">
-              
-                <md-input-container md-theme="second">
-                  <label>Contribution Amount</label>
-                  <md-input v-model="value" placeholder="Amount"></md-input>
-                </md-input-container>
-              
-              </form>
-              
-              <md-button class="md-raised" v-on:click="contribute">Contribute</md-button>
-              
-            </div>
-            
-          </md-layout>
+    
+    <md-layout md-flex="50" md-flex-small="70" md-flex-xsmall="100" md-align="center">
         
-        </md-layout>
-      </md-layout>
-    </div>
+      <h2 class="width-100 center">{{ params.name }}</h2>
+     
+      
+      <div style="width:50%">
+        <img :src="params.url" />
+      </div>
+    
+      <md-whiteframe elevation="1" class="width-100 padding-16">
+        <md-progress v-if="params.goal !== 0" md-theme="second" :md-progress="percent">
+        </md-progress>
+        <h4>
+          Contributions: {{ balance }} <span v-if="params.goal !== 0">/ {{ params.goal }}</span>
+        </h4>
+        <p v-if="params.start && params.start.length !== 0" >Start {{ params.start }}</p>
+        <p v-if="params.end && params.end.length !== 0" >End {{ params.end }}</p>
+      </md-whiteframe>
+      
+      <div class="margin-16 padding-16">
+      
+         <form novalidate @submit.stop.prevent="submit">
+        
+          <md-input-container md-theme="second">
+            <label>Contribution Amount</label>
+            <md-input v-model="value" placeholder="Amount"></md-input>
+          </md-input-container>
+        
+        </form>
+        
+        <md-button class="md-raised" v-on:click="contribute">Contribute</md-button>
+        
+      </div>
+      
+    </md-layout>
   `
 };

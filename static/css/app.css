@@ -34,7 +34,7 @@ body {
   z-index:98;
 }
 
-.page {
+.route {
   margin:0 16px;
   padding-top:80px;
   margin-bottom:16px;
@@ -59,6 +59,9 @@ body {
 /**************************************
 * Fine tuning
 **************************************/
+.center {
+  text-align:center;
+}
 .width-100 {
   width:100%;
 }

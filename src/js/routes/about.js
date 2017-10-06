@@ -7,16 +7,12 @@ export default {
   },
   
   template: `
-    <div class="page">
-      <md-layout md-align="center" :md-gutter="true">
-        <md-layout md-flex="35" md-flex-xsmall="80" md-align="center">
-            
-          <h2>Vue JS Boilerplate</h2>
-          
-          <p>Testing About Route</p>
+    <md-layout md-flex="50" md-flex-small="70" md-flex-xsmall="100" md-align="center">
         
-        </md-layout>
-      </md-layout>
-    </div>
+      <h2 class="width-100 center">Vue JS Boilerplate</h2>
+      
+      <p>Testing About Route</p>
+      
+    </md-layout>
   `
 };
