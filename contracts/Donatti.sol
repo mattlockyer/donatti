@@ -15,7 +15,7 @@ contract Donatti is Ownable {
   function() payable {}
   
   //new don
-  function create(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal, string _url) {
+  function create(string _name, bool _open, bool _over, uint256 _start, uint256 _end, uint256 _goal, string _url) payable {
     Don don = new Don(this);
     don.update(_name, _open, _over, _start, _end, _goal, _url);
     don.transferOwnership(msg.sender);
@@ -31,6 +31,10 @@ contract Donatti is Ownable {
       addr[i] = dons[list[i]];
     }
     return (addr, list);
+  }
+  
+  function totalDons() constant returns(uint256) {
+    return dons.length;
   }
   
 }

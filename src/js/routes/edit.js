@@ -32,8 +32,12 @@ export default {
     async load(refetch) {
       const { id } = this.$route.params;
       if (!id) return;
-      const don = APP.currentDon = APP.donMap[id];
-      if (!don) return;
+      
+      let don = APP.donMap[id];
+      if (!don) don = await APP.loadDon(id);
+      APP.currentDon = don;
+      
+      console.log(don);
       
       //get params
       this.params = APP.donParams[id];
@@ -43,10 +47,36 @@ export default {
       this.$forceUpdate();
     },
     async submit(params) {
+      //check owner
+      const owner = await APP.currentDon.owner.call();
+      if (owner !== APP.account) {
+        this.$root.snack('Sorry you are not the owner of this Don');
+        setTimeout(() => this.$root.router.push('/'), 3000);
+        return;
+      }
+      
+      //show loader
       this.$root.showLoader();
-      const tx = await APP.currentDon.update(...params, { from: APP.account });
+      
+      //explain to user what's going to happen
+      this.$root.snack('Please accept the transaction to edit your Don');
+      //assume they will accept
+      setTimeout(() => this.$root.snack('Processing edits'), 5000);
+      //update the don
+      let tx;
+      try {
+        tx = await APP.currentDon.update(...params, { from: APP.account });
+      } catch(e) {
+        this.$root.snack('Transaction was rejected, please try again');
+        return;
+      }
+      //transaction mined
+      this.$root.snack('Waiting for confirmations');
+      //waiting for confirmation
+      await utils.waitFor(tx);
+      //confirmed, redirect
+      this.$root.snack('Donatti updated');
       this.$root.hideLoader();
-      this.$root.snack('Donatti Updated');
       this.load(true);
     }
     //jshint ignore: end

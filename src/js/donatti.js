@@ -12,7 +12,7 @@ const APP = window.APP = {
     url: 'https://kovan.infura.io/',
   },
   connectedNetwork: null,
-  contractAddress: '0xcC958Aa9B8C72F6aCa889C94B0b45869d7d01d4f',
+  contractAddress: '0xA6374376a80434065359150F537bF802238Aee58',
   //dons
   donMap: {},
   donParams: {},
@@ -20,6 +20,11 @@ const APP = window.APP = {
   donCollected: {},
   donList: [],
   dons: [],
+  //browseList
+  browseDonList: [],
+  //state
+  initialized: false,
+  userDonsLoaded: false,
   /**************************************
   * Init
   **************************************/
@@ -35,19 +40,19 @@ const APP = window.APP = {
       //this.noAccount();
     }
     try {
-      APP.accounts = await utils.getAccounts();
+      this.accounts = await utils.getAccounts();
     } catch(e) {
-      APP.accounts = [null];
+      this.accounts = [null];
       //this.noAccount();
     }
     //regular init
-    APP.account = APP.accounts[0];
+    this.account = this.accounts[0];
     //remove for production
-    APP.deploy = () => utils.deployContract(Donatti, APP.account, 4000000);
+    this.deploy = () => utils.deployContract(Donatti, this.account, 4000000);
     //regular init
-    APP.donatti = await utils.getContract(Donatti, APP.contractAddress);
-    APP.initialized = true;
-    APP.getUserDons();
+    this.donatti = await utils.getContract(Donatti, this.contractAddress);
+    this.initialized = true,
+    this.getUserDons();
   },
   /**************************************
   * Loading a users dons
@@ -80,6 +85,23 @@ const APP = window.APP = {
     APP.userDonsLoaded = true;
     //console.log('dons loaded');
   },
+  async getPublicDons(cb) {
+    
+    const totalDons = (await APP.donatti.totalDons.call()).toNumber() - 1;
+    console.log('totalDons', totalDons);
+    //grab each don instance
+    for (let i = totalDons; i > -1; i--) {
+      const addr = await APP.donatti.dons.call(i);
+      if (!APP.donList.includes(index)) {
+        await APP.loadDon(index, addr);
+      }
+    }
+    
+    if (cb) cb();
+  },
+  
+  
+  
   async loadDon(id, addr) {
     APP.donList.push(id);
     if (!addr) addr = await APP.donatti.dons.call(id);
@@ -135,5 +157,5 @@ const APP = window.APP = {
       return;
     }
     if (cb) cb();
-  }
+  },
 };

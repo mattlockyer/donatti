@@ -40,7 +40,7 @@ contract('Donatti', function(accounts) {
     const args = ["Test Don Box", true, false, 0, 999999999999, 1000, 'https://mywickedsite.com'];
     
     const estimate = await donatti.create.estimateGas(...args);
-    console.log(estimate);
+    console.log('Don gas cost', estimate);
     
     const tx = await donatti.create(...args, {
       from: owner,

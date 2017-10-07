@@ -11,18 +11,23 @@ export default {
   },
 
   created() {
-    this.$root.title = 'My Dons';
+    this.$root.title = 'Browse Dons';
   },
   
   mounted() {
     this.$root.showLoader(true);
     if (!APP.userDonsLoaded) this.$root.snack('Loading your Dons', 4000);
-    APP.getDons(() => {
-      this.dons = APP.donList;
-      this.loaded = true;
-      this.$root.hideLoader(true);
-      this.$forceUpdate();
-    });
+    
+    setTimeout(() => {
+      APP.getPublicDons(() => {
+        this.dons = APP.donList;
+        this.loaded = true;
+        this.$root.hideLoader(true);
+        this.$forceUpdate();
+      });
+    }, 2000);
+    
+    
   },
 
   methods: {

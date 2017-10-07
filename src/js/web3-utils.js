@@ -87,6 +87,32 @@ const deployContract = (json, from, gas) => {
   });
 };
 /**************************************
+* Wait for Confirmations
+**************************************/
+const waitFor = (tx) => new Promise((resolve, reject) => {
+  const block = tx.receipt.blockNumber;
+  console.log('waitFor: transaction to pass block #', block);
+  //tracking
+  let i;
+  const limit = 30; //2 minute wait
+  //check block
+  const check = () => {
+    web3.eth.getBlockNumber((err, res) => {
+      console.log('latest block #', res);
+      if (res > block) {
+        resolve();
+        return;
+      } else if (i > limit) {
+        reject();
+        return;
+      }
+      i++;
+      setTimeout(check, 4000); //check every 4s
+    });
+  };
+  check();
+});
+/**************************************
 * Helpers
 **************************************/
 const roundTo = (num, dec) => {
@@ -100,18 +126,13 @@ const promisify = (inner) => new Promise((resolve, reject) =>
     resolve(res);
   })
 );
-const getBalance = (account, at) => promisify(cb => web3.eth.getBalance(account, at, cb));
+const getBalance = (account, at) => promisify((cb) => web3.eth.getBalance(account, at, cb));
 const timeout = ms => new Promise(res => setTimeout(res, ms));
 const toEth = (wei) => window.web3.fromWei(wei, 'ether').toNumber();
 const toWei = (eth) => window.web3.toWei(eth, 'ether');
-const toUSD = (function() {
-  let usdPrice = 0;
-  const update = () => fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD')
-    .then((res) => res.json()).then((res) => usdPrice = parseFloat(res[0].price_usd));
-  update();
-  setInterval(update, 60000);
-  return (eth) => roundTo(eth * usdPrice, 2);
-})();
+const toUSD = (eth) => new Promise((resolve, reject) =>
+  fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD').then((res) =>
+    res.json()).then((res) => resolve(roundTo(parseFloat(eth * res[0].price_usd), 2))));
 /**************************************
 * Exports
 **************************************/
@@ -122,6 +143,7 @@ export default {
   getAccounts,
   getContract,
   deployContract,
+  waitFor,
   getBalance,
   timeout,
   toEth,

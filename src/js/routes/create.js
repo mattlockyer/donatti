@@ -2,6 +2,7 @@
 
 import Don from '../../../build/contracts/Don';
 import DonForm from '../components/don-form';
+import utils from '../web3-utils';
 
 export default {
   
@@ -16,37 +17,29 @@ export default {
   methods: {
     //jshint ignore: start
     async submit(params) {
-      
-      console.log(params, APP.donatti);
-      
       //show loader
       this.$root.showLoader();
       //explain to user what's going to happen
-      this.$root.snack('Please accept the transaction and we will redirect you when your Don is created', 4000);
+      this.$root.snack('Please accept the transaction to create your Don');
+      //assume they will accept
+      setTimeout(() => this.$root.snack('Processing Donatti'), 5000);
       //create the don from the form params
-      const tx = await APP.donatti.create(...params, {
-        from: APP.account,
-        value: 0,
-        gas: 2000000 //2 million gas should be plenty
-      });
-      
-      
-      /**************************************
-      * TODO WAIT FOR CONFIRMATION
-      **************************************/
-      
-      APP.updateDons();
-      
-      //should wait for tx to return from Kovan
+      let tx;
+      try {
+        tx = await APP.donatti.create(...params, { from: APP.account, value: 0, gas: 2000000 });
+      } catch(e) {
+        this.$root.snack('Transaction was rejected, please try again');
+        return;
+      }
+      //transaction mined
+      this.$root.snack('Waiting for confirmations');
+      //waiting for confirmation
+      await utils.waitFor(tx);
+      //confirmed, redirect
+      this.$root.snack('Donatti created');
+      APP.getUserDons();
       this.$root.hideLoader();
       this.$root.router.push('/dons');
-      
-      //debug simulate blockchain delay
-      // setTimeout(() => {
-      //   this.$root.hideLoader();
-      //   this.$root.router.push('/dons');
-      // }, 5000);
-      
     },
     //jshint ignore: end
   },

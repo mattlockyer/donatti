@@ -4,6 +4,7 @@ import Home from './routes/home.js';
 import About from './routes/about.js';
 import Create from './routes/create.js';
 import Dons from './routes/dons.js';
+import Browse from './routes/browse.js';
 import Don from './routes/don.js';
 import Edit from './routes/edit.js';
 
@@ -13,6 +14,7 @@ const routes = [
   { path: '/about', component: About, label: 'About', visible: true },
   { path: '/create', component: Create, label: 'Create', visible: true },
   { path: '/dons', component: Dons, label: 'My Dons', visible: true },
+  { path: '/browse', component: Browse, label: 'Browse Dons', visible: true },
   
   { path: '/don/:id', component: Don, visible: false },
   { path: '/edit/:id', component: Edit, visible: false },

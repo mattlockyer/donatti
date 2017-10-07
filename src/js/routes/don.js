@@ -45,7 +45,7 @@ export default {
       if (refetch) await APP.getParams(don);
       this.params = APP.donParamsObj[id];
       
-      this.updateBalance();
+      await this.updateBalance();
       
       //hide the loader
       this.$root.hideLoader(true);
@@ -68,7 +68,7 @@ export default {
     async updateBalance() {
       this.balance = await APP.getBalance(APP.currentDon);
       this.percent = this.balance / this.params.goal * 100;
-      this.balanceUSD = utils.toUSD(this.balance);
+      this.balanceUSD = await utils.toUSD(this.balance);
     }
     //jshint ignore: end
   },
@@ -88,13 +88,13 @@ export default {
         <md-progress v-if="params.goal !== 0" md-theme="second" :md-progress="percent">
         </md-progress>
         <h4>
-          Contributions: {{ balance }} <span v-if="params.goal !== 0">/ {{ params.goal }}</span>
+          Contributions: {{ balance }} <span v-if="typeof params.goal === 'number'">/ {{ params.goal }}</span>
         </h4>
         <h4>
           Total USD Raised: \${{ this.balanceUSD }}
         </h4>
-        <p v-if="params.start && params.start.length !== 0" >Start {{ params.start }}</p>
-        <p v-if="params.end && params.end.length !== 0" >End {{ params.end }}</p>
+        <p v-if="typeof params.start === 'number'" >Start {{ params.start }}</p>
+        <p v-if="typeof params.end === 'number'" >End {{ params.end }}</p>
       </md-whiteframe>
       
       <div class="margin-16 padding-16">

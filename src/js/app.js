@@ -60,9 +60,12 @@ const VueApp = new Vue({
       this.$refs.leftSidenav.toggle();
     },
     snack(msg, dur = 3000) {
-      this.snackbar.message = msg;
-      this.snackbar.duration = dur;
-      if (!this.$refs.snackbar.active) this.$refs.snackbar.open();
+      setTimeout(() => {
+        if (this.$refs.snackbar.active) return;
+        this.snackbar.message = msg;
+        this.snackbar.duration = dur;
+        this.$refs.snackbar.open();
+      }, 100);
     },
   }
 });
