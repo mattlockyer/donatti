@@ -16,7 +16,7 @@ export default {
   
   mounted() {
     this.$root.showLoader(true);
-    if (!APP.userDonsLoaded) this.$root.snack('Loading your Dons', 4000);
+    if (!APP.userDonsLoaded) this.$root.snack('Loading your Dons');
     APP.getDons(() => {
       this.dons = APP.donList;
       this.loaded = true;
@@ -30,7 +30,7 @@ export default {
   },
 
   template: `
-      
+    
     <md-table v-if="dons.length > 0">
       <md-table-header>
         <md-table-row>
@@ -45,7 +45,7 @@ export default {
       </md-table-header>
     
       <md-table-body>
-        <md-table-row v-for="id in APP.donList">
+        <md-table-row v-for="id in dons">
           <md-table-cell>
             <router-link :to="'/don/' + id">{{ APP.donParamsObj[id].name }}</router-link>
           </md-table-cell>

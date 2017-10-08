@@ -21,7 +21,7 @@ const APP = window.APP = {
   donList: [],
   dons: [],
   //browseList
-  browseDonList: [],
+  publicDonList: [],
   //state
   initialized: false,
   userDonsLoaded: false,
@@ -77,33 +77,40 @@ const APP = window.APP = {
     //grab each don instance
     for (let i in indicies) {
       const addr = addresses[i];
-      const index = indicies[i].toNumber();
-      if (!APP.donList.includes(index)) {
-        await APP.loadDon(index, addr);
+      const id = indicies[i].toNumber();
+      if (!APP.donList.includes(id)) {
+        APP.donList.push(id);
+        await APP.loadDon(id, addr);
       }
     }
     APP.userDonsLoaded = true;
     //console.log('dons loaded');
   },
+  /**************************************
+  * Loading Public Dons
+  **************************************/
   async getPublicDons(cb) {
-    
+    //might not have contract yet
+    if (!APP.initialized) {
+      setTimeout(() => APP.getPublicDons(cb), 250);
+      return;
+    }
     const totalDons = (await APP.donatti.totalDons.call()).toNumber() - 1;
     console.log('totalDons', totalDons);
     //grab each don instance
-    for (let i = totalDons; i > -1; i--) {
-      const addr = await APP.donatti.dons.call(i);
-      if (!APP.donList.includes(index)) {
-        await APP.loadDon(index, addr);
+    for (let id = totalDons; id > -1; id--) {
+      const addr = await APP.donatti.dons.call(id);
+      if (!APP.publicDonList.includes(id)) {
+        APP.publicDonList.push(id);
+        await APP.loadDon(id, addr);
       }
     }
-    
     if (cb) cb();
   },
-  
-  
-  
+  /**************************************
+  * Load a Single Dons
+  **************************************/
   async loadDon(id, addr) {
-    APP.donList.push(id);
     if (!addr) addr = await APP.donatti.dons.call(id);
     const don = await utils.getContract(Don, addr);
     don.id = id;

@@ -14,7 +14,7 @@ const routes = [
   { path: '/about', component: About, label: 'About', visible: true },
   { path: '/create', component: Create, label: 'Create', visible: true },
   { path: '/dons', component: Dons, label: 'My Dons', visible: true },
-  { path: '/browse', component: Browse, label: 'Browse Dons', visible: true },
+  { path: '/browse', component: Browse, label: 'Recent Dons', visible: true },
   
   { path: '/don/:id', component: Don, visible: false },
   { path: '/edit/:id', component: Edit, visible: false },

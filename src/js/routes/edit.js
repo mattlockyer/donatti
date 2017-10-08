@@ -37,8 +37,6 @@ export default {
       if (!don) don = await APP.loadDon(id);
       APP.currentDon = don;
       
-      console.log(don);
-      
       //get params
       this.params = APP.donParams[id];
       if (refetch) this.params = await APP.getParams(don);
@@ -47,6 +45,17 @@ export default {
       this.$forceUpdate();
     },
     async submit(params) {
+      this.$root.snack('Estimating gas costs...');
+      
+      const gas = await utils.toUSD((await APP.currentDon.update.estimateGas(...params)) * 0.000000021);
+      this.$root.prompt({
+        title: 'Gas Estimate',
+        content: `This will cost approximately \$${ gas } USD with a gas price of 21 gwei`,
+        accept:() => this.edit(params),
+        reject:() => this.$root.snack('Donatti update cancelled, please try again')
+      });
+    },
+    async edit(params) {
       //check owner
       const owner = await APP.currentDon.owner.call();
       if (owner !== APP.account) {
@@ -61,12 +70,13 @@ export default {
       //explain to user what's going to happen
       this.$root.snack('Please accept the transaction to edit your Don');
       //assume they will accept
-      setTimeout(() => this.$root.snack('Processing edits'), 5000);
+      setTimeout(() => this.$root.snack('Processing update'), 5000);
       //update the don
       let tx;
       try {
         tx = await APP.currentDon.update(...params, { from: APP.account });
       } catch(e) {
+        this.$root.hideLoader();
         this.$root.snack('Transaction was rejected, please try again');
         return;
       }

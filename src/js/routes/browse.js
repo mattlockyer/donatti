@@ -11,23 +11,18 @@ export default {
   },
 
   created() {
-    this.$root.title = 'Browse Dons';
+    this.$root.title = 'Recent Dons';
   },
   
   mounted() {
     this.$root.showLoader(true);
-    if (!APP.userDonsLoaded) this.$root.snack('Loading your Dons', 4000);
-    
-    setTimeout(() => {
-      APP.getPublicDons(() => {
-        this.dons = APP.donList;
-        this.loaded = true;
-        this.$root.hideLoader(true);
-        this.$forceUpdate();
-      });
-    }, 2000);
-    
-    
+    if (!APP.userDonsLoaded) this.$root.snack('Loading Dons');
+    APP.getPublicDons(() => {
+      this.dons = APP.publicDonList;
+      this.loaded = true;
+      this.$root.hideLoader(true);
+      this.$forceUpdate();
+    });
   },
 
   methods: {
@@ -35,7 +30,7 @@ export default {
   },
 
   template: `
-      
+
     <md-table v-if="dons.length > 0">
       <md-table-header>
         <md-table-row>
@@ -45,12 +40,11 @@ export default {
           <md-table-head>Goal</md-table-head>
           <md-table-head>Start</md-table-head>
           <md-table-head>End</md-table-head>
-          <md-table-head></md-table-head>
         </md-table-row>
       </md-table-header>
     
       <md-table-body>
-        <md-table-row v-for="id in APP.donList">
+        <md-table-row v-for="id in dons">
           <md-table-cell>
             <router-link :to="'/don/' + id">{{ APP.donParamsObj[id].name }}</router-link>
           </md-table-cell>
@@ -59,9 +53,6 @@ export default {
           <md-table-cell>{{ APP.donParamsObj[id].goal }}</md-table-cell>
           <md-table-cell>{{ APP.donParamsObj[id].start }}</md-table-cell>
           <md-table-cell>{{ APP.donParamsObj[id].end }}</md-table-cell>
-          <md-table-cell>
-            <router-link :to="'/edit/' + id">Edit</router-link>
-          </md-table-cell>
         </md-table-row>
       </md-table-body>
     </md-table>

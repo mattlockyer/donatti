@@ -19,14 +19,22 @@ const VueApp = new Vue({
   router,
   
   data: {
+    title: 'Donatti',
     router,
+    routeLoader: false,
     menu: router.options.routes,
     snackbar: {
       message: 'message',
       duration: 3000
     },
-    title: 'Donatti',
-    routeLoader: false
+    dialog: {
+      title: 'Dialog',
+      content: 'Hello I am a dialog',
+      acceptLabel: 'Ok',
+      rejectLabel: 'Cancel',
+      accept: null,
+      reject: null
+    },
   },
   
   watch: {
@@ -38,6 +46,7 @@ const VueApp = new Vue({
   mounted() {
     setTimeout(() => APP.init(), 500);
     this.$refs.snackWrap.classList.remove('hidden');
+    this.$refs.dialogWrap.classList.remove('hidden');
     this.hideLoader();
   },
   
@@ -66,6 +75,19 @@ const VueApp = new Vue({
         this.snackbar.duration = dur;
         this.$refs.snackbar.open();
       }, 100);
+    },
+    //dialog
+    prompt(args) {
+      Object.assign(this.dialog, args);
+      this.$refs.dialog.open();
+    },
+    acceptPrompt() {
+      if (this.dialog.accept) this.dialog.accept();
+      this.$refs.dialog.close();
+    },
+    rejectPrompt() {
+      if (this.dialog.reject) this.dialog.reject();
+      this.$refs.dialog.close();
     },
   }
 });

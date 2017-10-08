@@ -17,6 +17,16 @@ export default {
   methods: {
     //jshint ignore: start
     async submit(params) {
+      this.$root.snack('Estimating gas costs...');
+      const gas = await utils.toUSD((await APP.donatti.create.estimateGas(...params)) * 0.000000021);
+      this.$root.prompt({
+        title: 'Gas Estimate',
+        content: `This will cost approximately \$${ gas } USD with a gas price of 21 gwei`,
+        accept:() => this.create(params),
+        reject:() => this.$root.snack('Donatti creation cancelled, please try again')
+      });
+    },
+    async create(params) {
       //show loader
       this.$root.showLoader();
       //explain to user what's going to happen
@@ -28,6 +38,7 @@ export default {
       try {
         tx = await APP.donatti.create(...params, { from: APP.account, value: 0, gas: 2000000 });
       } catch(e) {
+        this.$root.hideLoader();
         this.$root.snack('Transaction was rejected, please try again');
         return;
       }
@@ -40,7 +51,7 @@ export default {
       APP.getUserDons();
       this.$root.hideLoader();
       this.$root.router.push('/dons');
-    },
+    }
     //jshint ignore: end
   },
   

@@ -83,6 +83,19 @@
       </md-snackbar>
     </div>
     
+    <div ref="dialogWrap" class="hidden">
+      <md-dialog ref="dialog">
+        <md-dialog-title>{{ dialog.title }}</md-dialog-title>
+        <md-dialog-content class="padding-0">
+          {{ dialog.content }}
+        </md-dialog-content>
+        <md-dialog-actions class="margin-16">
+          <md-button class="md-raised" v-on:click="acceptPrompt">{{ dialog.acceptLabel }}</md-button>
+          <md-button class="md-raised" v-on:click="rejectPrompt">{{ dialog.rejectLabel }}</md-button>
+        </md-dialog-actions>
+      </md-dialog>
+    </div>
+    
   </div>
 
   <!--
