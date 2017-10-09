@@ -51,7 +51,7 @@ const APP = window.APP = {
     this.deploy = () => utils.deployContract(Donatti, this.account, 4000000);
     //regular init
     this.donatti = await utils.getContract(Donatti, this.contractAddress);
-    this.initialized = true,
+    this.initialized = true;
     this.getUserDons();
   },
   /**************************************

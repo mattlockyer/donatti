@@ -45,6 +45,14 @@ export default {
       this.$forceUpdate();
     },
     async submit(params) {
+      //check owner
+      const owner = await APP.currentDon.owner.call();
+      if (owner !== APP.account) {
+        this.$root.snack('Sorry you are not the owner of this Don');
+        setTimeout(() => this.$root.router.push('/'), 3000);
+        return;
+      }
+      
       this.$root.snack('Estimating gas costs...');
       
       const gas = await utils.toUSD((await APP.currentDon.update.estimateGas(...params)) * 0.000000021);
@@ -56,14 +64,6 @@ export default {
       });
     },
     async edit(params) {
-      //check owner
-      const owner = await APP.currentDon.owner.call();
-      if (owner !== APP.account) {
-        this.$root.snack('Sorry you are not the owner of this Don');
-        setTimeout(() => this.$root.router.push('/'), 3000);
-        return;
-      }
-      
       //show loader
       this.$root.showLoader();
       

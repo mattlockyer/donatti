@@ -1,0 +1,147 @@
+
+
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="ico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="ico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="ico/favicon-16x16.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Donatti</title>
+  <meta name="description" content="Online Donation Boxes for All">
+  <meta name="author" content="mattlock">
+
+  <!--[if lt IE 9]>
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/localforage/1.5.0/localforage.min.js" async></script>
+  <script src="//cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.min.js"></script>
+  <script src="//cdn.rawgit.com/trufflesuite/truffle-contract/812436ca/dist/truffle-contract.min.js"></script>
+  
+  <script src="js/web3-funcs.js"></script>
+  
+  <script>
+    
+    const utils = web3funcs;
+    
+    const APP = window.APP = {
+      //network info
+      network: {
+        id: 42,
+        name: 'kovan',
+        url: 'https://kovan.infura.io/',
+      },
+      connectedNetwork: null,
+      contractAddress: '0xA6374376a80434065359150F537bF802238Aee58',
+      //dons
+      donMap: {},
+      donParams: {},
+      donParamsObj: {},
+      donCollected: {},
+      donList: [],
+      dons: [],
+      //browseList
+      publicDonList: [],
+      //state
+      initialized: false,
+      userDonsLoaded: false,
+      /**************************************
+      * Init
+      **************************************/
+      //jshint ignore: start
+      async init() {
+        
+        const Donatti = this.Donatti = await fetch('../../build/contracts/Donatti.json').then((res) => res.json());
+        const Don = this.Don = await fetch('../../build/contracts/Don.json').then((res) => res.json());
+        
+        
+        utils.getWeb3(APP.network.url);
+        //get network
+        const network = APP.connectedNetwork = await utils.getNetwork();
+        //console.log(network);
+        if (network.id !== APP.network.id) {
+          console.log('MetaMask: wrong network');
+          utils.setWeb3(APP.network.url);
+          //this.noAccount();
+        }
+        try {
+          this.accounts = await utils.getAccounts();
+        } catch(e) {
+          this.accounts = [null];
+          //this.noAccount();
+        }
+        //regular init
+        this.account = this.accounts[0];
+        //remove for production
+        this.deploy = () => utils.deployContract(Donatti, this.account, 4000000);
+        //regular init
+        this.donatti = await utils.getContract(Donatti, this.contractAddress);
+        this.initialized = true;
+      },
+      /**************************************
+      * Load a Single Dons
+      **************************************/
+      async loadDon(id, addr) {
+        if (!addr) addr = await APP.donatti.dons.call(id);
+        const don = await utils.getContract(this.Don, addr);
+        don.id = id;
+        APP.donMap[id] = don;
+        await APP.getParams(don);
+        await APP.getBalance(don);
+        return don;
+      },
+      /**************************************
+      * Loading the params of a don
+      **************************************/
+      async getParams(don) {
+        const params = await don.getParameters.call();
+      
+        //formatting dates
+        if (params[3].toNumber() === 0) params[3] = '';
+        else params[3] = FlatpickrInstance.prototype.formatDate(new Date(params[3] * 1000), 'Y-m-d h:i');
+        if (params[4].toNumber() === 9999999999) params[4] = '';
+        else params[4] = FlatpickrInstance.prototype.formatDate(new Date(params[4] * 1000), 'Y-m-d h:i');
+        //goal
+        params[5] = utils.toEth(params[5]);
+        if (params[5] === 0) params[5] = '';
+        //params
+        APP.donParams[don.id] = params;
+        APP.donParamsObj[don.id] = APP.getParamObj(params);
+        return params.slice();
+      },
+      getParamObj(params) {
+        const obj = {};
+        ['name', 'open', 'over', 'start', 'end', 'goal', 'url'].forEach((k, i) => obj[k] = params[i]);
+        if (obj.start === '') obj.start = 'begun';
+        if (obj.end === '') obj.end = 'never';
+        if (obj.goal === '') obj.goal = 'unlimited';
+        return obj;
+      },
+      /**************************************
+      * Getting and caching the balance of a don
+      **************************************/
+      async getBalance(don) {
+        const collected = utils.toEth(await don.collected.call());
+        APP.donCollected[don.id] = collected
+        return collected;
+      },
+      //jshint ignore: end
+    };
+    
+    APP.init();
+
+  </script>
+  
+</body>
+</html>
