@@ -9,10 +9,10 @@ export default {
   template: `
     <md-layout md-flex="50" md-flex-small="70" md-flex-xsmall="100" md-align="center">
         
-      <h2 class="width-100 center">Vue JS Boilerplate</h2>
+      <h2>About Donatti</h2>
       
-      <p>Testing About Route</p>
-      
+      <p>Donatti </p>
+    
     </md-layout>
   `
 };

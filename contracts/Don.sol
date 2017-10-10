@@ -5,11 +5,13 @@
 pragma solidity ^0.4.11;
 
 import './Ownable.sol';
+import './Token.sol';
 
 contract Don is Ownable {
   
-  //collected
+  //books
   uint256 public collected;
+  uint256 public totalCollected;
   
   //donatti
   address private donatti;
@@ -33,6 +35,18 @@ contract Don is Ownable {
   }
   
   /**************************************
+  * Payable
+  **************************************/
+  function() payable isOpen {
+    collected += msg.value;
+    totalCollected += msg.value;
+    
+    Token(donatti).credit(owner, msg.value * 1000);
+    
+    donatti.transfer((msg.value - (msg.value % 100)) / 100);
+  }
+  
+  /**************************************
   * Public Functions
   **************************************/
   function Don(address _donatti) {
@@ -41,14 +55,6 @@ contract Don is Ownable {
   
   function getParameters() constant returns (string, bool, bool, uint256, uint256, uint256, string) {
     return (name, open, over, start, end, goal, url);
-  }
-  
-  /**************************************
-  * Payable
-  **************************************/
-  function() payable isOpen {
-    collected += msg.value;
-    donatti.transfer((msg.value - (msg.value % 100)) / 100);
   }
   
   /**************************************

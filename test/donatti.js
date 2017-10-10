@@ -61,7 +61,15 @@ contract('Donatti', function(accounts) {
   it("should be able to pay a don using default", async () => {
     const tx = await don.send(1000, { from: owner });
     const collected = (await don.collected.call()).toNumber();
-    assert(true, "don balance doesn't match");
+    
+    const balance = (await donatti.balanceOf.call(owner)).toNumber();
+    console.log('balance', balance);
+    
+    const totalSupply = (await donatti.totalSupply.call()).toNumber();
+    console.log('totalSupply', totalSupply);
+    
+    
+    assert(collected === 1000, "don balance doesn't match");
   });
   
   /**************************************

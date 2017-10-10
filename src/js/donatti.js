@@ -12,7 +12,7 @@ const APP = window.APP = {
     url: 'https://kovan.infura.io/',
   },
   connectedNetwork: null,
-  contractAddress: '0xA6374376a80434065359150F537bF802238Aee58',
+  contractAddress: '0x4efcaB00e177a05db46E0884fc77bb56a0F75eaf',
   //dons
   donMap: {},
   donParams: {},

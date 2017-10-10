@@ -6,8 +6,9 @@ pragma solidity ^0.4.11;
 
 import './Ownable.sol';
 import './Don.sol';
+import './Token.sol';
 
-contract Donatti is Ownable {
+contract Donatti is Ownable, Token {
   
   address[] public dons;
   mapping(address => uint256[]) public donMap;
@@ -33,8 +34,29 @@ contract Donatti is Ownable {
     return (addr, list);
   }
   
+  //cannot return entire address array, must address dons seperately
   function totalDons() constant returns(uint256) {
     return dons.length;
+  }
+  
+  /**************************************
+  * Token Functionality
+  **************************************/
+  
+  string public name = 'Donatti Token';
+  string public symbol = 'DONT';
+  uint256 public decimals = 18;
+  
+  uint256 public totalSupply;
+  mapping(address => uint256) public balanceOf;
+  
+  function credit(address _to, uint256 _amount) {
+    balanceOf[_to] += _amount;
+    totalSupply += _amount;
+  }
+  
+  function transfer(address recipient, uint amount) {
+    
   }
   
 }
