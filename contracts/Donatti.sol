@@ -6,9 +6,8 @@ pragma solidity ^0.4.11;
 
 import './Ownable.sol';
 import './Don.sol';
-import './Token.sol';
 
-contract Donatti is Ownable, Token {
+contract Donatti is Ownable {
   
   address[] public dons;
   mapping(address => uint256[]) public donMap;

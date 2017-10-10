@@ -5,7 +5,7 @@
 pragma solidity ^0.4.11;
 
 import './Ownable.sol';
-import './Token.sol';
+import './Donatti.sol';
 
 contract Don is Ownable {
   
@@ -40,10 +40,10 @@ contract Don is Ownable {
   function() payable isOpen {
     collected += msg.value;
     totalCollected += msg.value;
-    
-    Token(donatti).credit(owner, msg.value * 1000);
-    
+    //transfer fee to Donatti
     donatti.transfer((msg.value - (msg.value % 100)) / 100);
+    //credit the owner with DONTs
+    Donatti(donatti).credit(owner, msg.value * 1000);
   }
   
   /**************************************
