@@ -30,43 +30,47 @@ export default {
   },
 
   template: `
-    
-    <md-table v-if="dons.length > 0">
-      <md-table-header>
-        <md-table-row>
-          <md-table-head>Name</md-table-head>
-          <md-table-head>ID</md-table-head>
-          <md-table-head>Raised</md-table-head>
-          <md-table-head>Goal</md-table-head>
-          <md-table-head>Start</md-table-head>
-          <md-table-head>End</md-table-head>
-          <md-table-head></md-table-head>
-        </md-table-row>
-      </md-table-header>
-    
-      <md-table-body>
-        <md-table-row v-for="id in dons">
-          <md-table-cell>
-            <router-link :to="'/don/' + id">{{ APP.donParamsObj[id].name }}</router-link>
-          </md-table-cell>
-          <md-table-cell>{{ id }}</md-table-cell>
-          <md-table-cell>{{ APP.donCollected[id] }}</md-table-cell>
-          <md-table-cell>{{ APP.donParamsObj[id].goal }}</md-table-cell>
-          <md-table-cell>{{ APP.donParamsObj[id].start }}</md-table-cell>
-          <md-table-cell>{{ APP.donParamsObj[id].end }}</md-table-cell>
-          <md-table-cell>
-            <router-link :to="'/edit/' + id">Edit</router-link>
-          </md-table-cell>
-        </md-table-row>
-      </md-table-body>
-    </md-table>
-    
-    
-    <div v-else-if="loaded">
-      <p>You currently have no Dons, try creating a Don by clicking below</p>
-      <md-layout md-align="center">
-        <router-link to="/create"><md-button class="md-raised">Create</md-button></router-link>
-      </md-layout>
-    </div>
+      
+      <div v-if="dons.length > 0" class="width-100">
+        <md-card v-for="id in dons">
+        
+          <md-card-header>
+            <div class="md-title">{{ APP.donParamsObj[id].name }}</div>
+          </md-card-header>
+        
+          <md-card-content>
+            <md-list>
+              <md-list-item>
+                {{ APP.donCollected[id] }}
+              </md-list-item>
+              <md-list-item>
+                  <md-icon>whatshot</md-icon>
+                  <span>Details</span>
+                  <md-list-expand>
+                  <md-list>
+                      <md-list-item class="md-inset">Goal: {{ APP.donParamsObj[id].goal }}</md-list-item>
+                      <md-list-item class="md-inset">Start: {{ APP.donParamsObj[id].start }}</md-list-item>
+                      <md-list-item class="md-inset">End: {{ APP.donParamsObj[id].end }}</md-list-item>
+                  </md-list>
+                  </md-list-expand>
+              </md-list-item>
+            </md-list>
+          </md-card-content>
+          
+          <md-card-actions>
+            <router-link :to="'/don/' + id" class="margin-right-8"><md-button class="md-raised">View</md-button></router-link>
+            <router-link :to="'/edit/' + id"><md-button class="md-raised">Edit</md-button></router-link>
+          </md-card-actions>
+        
+        </md-card>
+      </div>
+      
+      
+      <div v-else-if="loaded">
+        <p>You currently have no Dons, try creating a Don by clicking below</p>
+        <md-layout md-align="center">
+          <router-link to="/create"><md-button class="md-raised">Create</md-button></router-link>
+        </md-layout>
+      </div>
   `
 };
