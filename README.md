@@ -4,6 +4,8 @@ Donatti is a smart contract platform for producing donation wallets with funding
 ## Dependencies
 You will need some global dependencies to develop this project such as concurrently and testrpc
 
+To install the local dependencies `npm i`
+
 ## Testing
 `truffle test`
 
